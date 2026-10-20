@@ -3,19 +3,14 @@
     "name": "laravel/vue-starter-kit",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": [
-        "laravel",
-        "framework"
-    ],
+    "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "inertiajs/inertia-laravel": "^3.0",
+        "filament/filament": "^5.0",
         "laravel/chisel": "^0.1.0",
-        "laravel/fortify": "^1.37.2",
         "laravel/framework": "^13.17",
-        "laravel/tinker": "^3.0",
-        "laravel/wayfinder": "^0.1.14"
+        "laravel/tinker": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",
@@ -55,16 +50,21 @@
             "Composer\\Config::disableProcessTimeout",
             "@php artisan dev"
         ],
-        "lint": [
+        "fix:php": [
             "pint --parallel"
         ],
-        "lint:check": [
+        "check:php": [
             "pint --parallel --test"
+        ],
+        "lint": [
+            "@fix:php"
+        ],
+        "lint:check": [
+            "@check:php"
         ],
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
             "npm run check",
-            "npm run types:check",
             "@test"
         ],
         "types:check": [
@@ -78,7 +78,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
