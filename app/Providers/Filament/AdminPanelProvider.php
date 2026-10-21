@@ -32,6 +32,11 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->profile()
+            ->brandName('PAH Immo')
+            ->brandLogo('/assets/logo.png')
+            ->darkModeBrandLogo('/assets/logo-dark.png')
+            ->brandLogoHeight(fn (): string => request()->routeIs('filament.admin.auth.login') ? '4.5rem' : '3rem')
+            ->favicon('/assets/favicon.png')
             ->colors([
                 'primary' => Color::Red,
             ])

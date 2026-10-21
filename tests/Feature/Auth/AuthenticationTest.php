@@ -11,6 +11,14 @@ test('login screen can be rendered', function () {
     $this->get(Filament::getLoginUrl())->assertOk();
 });
 
+test('login screen uses the brand logo and favicon', function () {
+    $this->get(Filament::getLoginUrl())
+        ->assertOk()
+        ->assertSeeHtml('/assets/logo.png')
+        ->assertSeeHtml('/assets/logo-dark.png')
+        ->assertSeeHtml('/assets/favicon.png');
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
