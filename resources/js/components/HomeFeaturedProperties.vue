@@ -93,7 +93,7 @@ const properties = [
                 <Link
                     href="/properties"
                     prefetch
-                    class="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full bg-neutral-950 px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                    class="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
                     Voir tous les biens
                     <span aria-hidden="true">→</span>
@@ -124,7 +124,7 @@ const properties = [
                         </picture>
 
                         <span
-                            class="absolute top-4 left-4 rounded-full bg-white px-4 py-1.5 text-sm font-medium text-neutral-900 shadow-sm"
+                            class="absolute top-4 left-4 rounded-full bg-brand-red px-4 py-1.5 text-sm font-medium text-white shadow-sm"
                         >
                             {{ property.status }}
                         </span>
@@ -191,8 +191,10 @@ const properties = [
                             {{ property.title }}
                         </h3>
                         <p class="text-sm text-neutral-500">
-                            {{ property.price }}
-                            <span class="text-neutral-300">–</span>
+                            <span class="font-medium text-brand-red">{{
+                                property.price
+                            }}</span>
+                            <span class="text-neutral-300"> – </span>
                             {{ property.address }}
                         </p>
                     </div>

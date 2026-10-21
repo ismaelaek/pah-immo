@@ -18,7 +18,6 @@ defineProps<{
 }>();
 
 const featuredTypes = ['Maison', 'Appartement', 'Villa'] as const;
-const filters = ['Ville', 'Maison', 'Résidentiel', 'Appartement'] as const;
 const prices = [
     'Tous les prix',
     'Moins de 250 000 €',
@@ -42,7 +41,6 @@ const rooms = [
 ];
 
 const selectedType = ref<(typeof featuredTypes)[number]>('Maison');
-const selectedFilter = ref<(typeof filters)[number]>('Ville');
 const propertyType = ref('');
 const price = ref('');
 const location = ref('');
@@ -90,11 +88,11 @@ function searchProperties(): void {
                                 v-for="type in featuredTypes"
                                 :key="type"
                                 type="button"
-                                class="cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm"
+                                class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium shadow-sm"
                                 :class="
                                     selectedType === type
-                                        ? 'bg-white'
-                                        : 'bg-white/90'
+                                        ? 'bg-brand-red text-white'
+                                        : 'bg-white/90 text-neutral-900'
                                 "
                                 @click="selectedType = type"
                             >
@@ -262,34 +260,10 @@ function searchProperties(): void {
                             </label>
                         </div>
 
-                        <div
-                            class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
-                        >
-                            <div
-                                class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm"
-                            >
-                                <span class="font-medium text-neutral-800">
-                                    Filtrer :
-                                </span>
-                                <button
-                                    v-for="filter in filters"
-                                    :key="filter"
-                                    type="button"
-                                    class="cursor-pointer font-medium transition-colors"
-                                    :class="
-                                        selectedFilter === filter
-                                            ? 'text-neutral-950'
-                                            : 'text-neutral-400 hover:text-neutral-700'
-                                    "
-                                    @click="selectedFilter = filter"
-                                >
-                                    {{ filter }}
-                                </button>
-                            </div>
-
+                        <div class="flex justify-end">
                             <button
                                 type="submit"
-                                class="cursor-pointer rounded-full bg-neutral-950 px-7 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                                class="cursor-pointer rounded-full bg-brand-red px-7 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                             >
                                 Rechercher
                             </button>

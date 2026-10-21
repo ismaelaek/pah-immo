@@ -8,6 +8,6 @@ void createInertiaApp({
     pages: './pages',
     layout: () => PublicLayout,
     progress: {
-        color: '#C8F04D',
+        color: '#d1504a',
     },
 });

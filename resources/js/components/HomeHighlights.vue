@@ -81,7 +81,7 @@ const stats = [
                                 class="size-2.5 rounded-full transition-colors"
                                 :class="
                                     currentSlide === index
-                                        ? 'bg-neutral-900'
+                                        ? 'bg-brand-red'
                                         : 'bg-neutral-300'
                                 "
                                 :aria-label="`Voir la photo ${index + 1}`"
@@ -176,14 +176,14 @@ const stats = [
                         </picture>
                     </div>
                     <p
-                        class="text-center text-lg font-medium tracking-tight text-neutral-950"
+                        class="text-center text-lg font-medium tracking-tight text-brand-red"
                     >
                         À partir de 250 000&nbsp;€
                     </p>
                     <Link
                         href="/properties"
                         prefetch
-                        class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-neutral-950 px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                        class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >
                         Voir les biens
                         <span aria-hidden="true">→</span>
@@ -201,7 +201,7 @@ const stats = [
                     :class="index > 0 ? 'lg:border-l lg:border-neutral-200' : ''"
                 >
                     <dt
-                        class="text-4xl font-semibold tracking-tight text-neutral-950 lg:text-5xl"
+                        class="text-4xl font-semibold tracking-tight text-brand-red lg:text-5xl"
                     >
                         {{ stat.value }}
                     </dt>

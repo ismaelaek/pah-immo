@@ -82,7 +82,7 @@ function isActive(href: string): boolean {
                 <Link
                     href="/contact"
                     prefetch
-                    class="cursor-pointer rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                    class="cursor-pointer rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
                     Contact
                 </Link>
@@ -141,7 +141,7 @@ function isActive(href: string): boolean {
                         class="cursor-pointer rounded-full px-5 py-3.5 text-base font-medium text-neutral-900 transition-colors"
                         :class="
                             isActive(link.href)
-                                ? 'bg-neutral-100 shadow-sm'
+                                ? 'bg-brand-red/10 text-brand-red'
                                 : 'hover:bg-neutral-50'
                         "
                         @click="menuOpen = false"
