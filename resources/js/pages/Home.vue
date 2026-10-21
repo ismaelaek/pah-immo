@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import HomeFeaturedProperties from '@/components/HomeFeaturedProperties.vue';
 import HomeHighlights from '@/components/HomeHighlights.vue';
 
 defineOptions({
@@ -299,5 +300,6 @@ function searchProperties(): void {
         </section>
 
         <HomeHighlights />
+        <HomeFeaturedProperties />
     </div>
 </template>
