@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import HomeBestValue from '@/components/HomeBestValue.vue';
+import HomeFaq from '@/components/HomeFaq.vue';
 import HomeFeaturedProperties from '@/components/HomeFeaturedProperties.vue';
 import HomeHighlights from '@/components/HomeHighlights.vue';
 
@@ -17,7 +19,6 @@ defineProps<{
     }[];
 }>();
 
-const featuredTypes = ['Maison', 'Appartement', 'Villa'] as const;
 const prices = [
     'Tous les prix',
     'Moins de 250 000 €',
@@ -40,7 +41,6 @@ const rooms = [
     '4 chambres et plus',
 ];
 
-const selectedType = ref<(typeof featuredTypes)[number]>('Maison');
 const propertyType = ref('');
 const price = ref('');
 const location = ref('');
@@ -83,23 +83,6 @@ function searchProperties(): void {
                     class="relative flex min-h-svh flex-col justify-end gap-8 px-5 pt-28 pb-5 sm:px-8 lg:gap-10 lg:px-12 lg:pb-8"
                 >
                     <div class="max-w-3xl">
-                        <div class="mb-6 flex flex-wrap gap-2">
-                            <button
-                                v-for="type in featuredTypes"
-                                :key="type"
-                                type="button"
-                                class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium shadow-sm"
-                                :class="
-                                    selectedType === type
-                                        ? 'bg-brand-red text-white'
-                                        : 'bg-white/90 text-neutral-900'
-                                "
-                                @click="selectedType = type"
-                            >
-                                {{ type }}
-                            </button>
-                        </div>
-
                         <h1
                             class="max-w-3xl text-4xl leading-[1.05] font-semibold tracking-tight text-white text-shadow-lg sm:text-5xl lg:text-7xl"
                         >
@@ -275,5 +258,7 @@ function searchProperties(): void {
 
         <HomeHighlights />
         <HomeFeaturedProperties />
+        <HomeBestValue />
+        <HomeFaq />
     </div>
 </template>

@@ -8,6 +8,8 @@ const properties = [
         address: '14 rue des Tilleuls, Lyon',
         bedrooms: 5,
         bathrooms: 2,
+        surface: 220,
+        type: 'Villa',
         status: 'À vendre',
         webp: '/assets/images/home-hero.webp',
         jpg: '/assets/images/home-hero.jpg',
@@ -19,6 +21,8 @@ const properties = [
         address: '8 avenue Victor Hugo, Bordeaux',
         bedrooms: 4,
         bathrooms: 2,
+        surface: 165,
+        type: 'Maison',
         status: 'À vendre',
         webp: '/assets/images/highlights-1.webp',
         jpg: '/assets/images/highlights-1.jpg',
@@ -30,6 +34,8 @@ const properties = [
         address: '22 promenade des Pins, Nice',
         bedrooms: 5,
         bathrooms: 3,
+        surface: 280,
+        type: 'Villa',
         status: 'À vendre',
         webp: '/assets/images/highlights-2.webp',
         jpg: '/assets/images/highlights-2.jpg',
@@ -37,14 +43,16 @@ const properties = [
     },
     {
         title: 'Appartement Lumière',
-        price: '495 000 €',
+        price: '2 450 € / mois',
         address: '31 rue Saint-Honoré, Paris',
         bedrooms: 3,
         bathrooms: 2,
-        status: 'À vendre',
+        surface: 92,
+        type: 'Appartement',
+        status: 'À louer',
         webp: '/assets/images/living-room.webp',
         jpg: '/assets/images/living-room.jpg',
-        alt: 'Salon d’un appartement lumineux à vendre à Paris',
+        alt: 'Salon d’un appartement lumineux à louer à Paris',
     },
     {
         title: 'Maison Saint-Michel',
@@ -52,6 +60,8 @@ const properties = [
         address: '5 place Saint-Michel, Lyon',
         bedrooms: 4,
         bathrooms: 2,
+        surface: 148,
+        type: 'Maison',
         status: 'À vendre',
         webp: '/assets/images/kitchen.webp',
         jpg: '/assets/images/kitchen.jpg',
@@ -59,14 +69,16 @@ const properties = [
     },
     {
         title: 'Duplex des Jardins',
-        price: '389 000 €',
+        price: '1 390 € / mois',
         address: '17 cours de l’Intendance, Bordeaux',
         bedrooms: 3,
         bathrooms: 1,
-        status: 'À vendre',
+        surface: 78,
+        type: 'Duplex',
+        status: 'À louer',
         webp: '/assets/images/bedroom.webp',
         jpg: '/assets/images/bedroom.jpg',
-        alt: 'Chambre d’un duplex à vendre à Bordeaux, proposé par PAH Immo',
+        alt: 'Chambre d’un duplex à louer à Bordeaux, proposé par PAH Immo',
     },
 ] as const;
 </script>
@@ -123,11 +135,20 @@ const properties = [
                             />
                         </picture>
 
-                        <span
-                            class="absolute top-4 left-4 rounded-full bg-brand-red px-4 py-1.5 text-sm font-medium text-white shadow-sm"
+                        <div
+                            class="absolute top-4 left-4 flex flex-wrap gap-2"
                         >
-                            {{ property.status }}
-                        </span>
+                            <span
+                                class="rounded-full bg-brand-red px-4 py-1.5 text-sm font-medium text-white shadow-sm"
+                            >
+                                {{ property.status }}
+                            </span>
+                            <span
+                                class="rounded-full bg-white px-4 py-1.5 text-sm font-medium text-neutral-900 shadow-sm"
+                            >
+                                {{ property.type }}
+                            </span>
+                        </div>
                     </div>
 
                     <div class="flex flex-col gap-2 px-1">
@@ -143,10 +164,43 @@ const properties = [
                                     stroke-width="1.6"
                                     aria-hidden="true"
                                 >
+                                    <rect
+                                        x="3.5"
+                                        y="3.5"
+                                        width="13"
+                                        height="13"
+                                        rx="1.5"
+                                    />
                                     <path
-                                        d="M3 10.5V17h4.2v-3.2h5.6V17H17V10.5M2 11l8-7 8 7"
+                                        d="M7 3.5v13M3.5 8h13"
+                                        stroke-linecap="round"
+                                    />
+                                </svg>
+                                {{ property.surface }}&nbsp;m²
+                            </span>
+                            <span class="text-neutral-300">·</span>
+                            <span class="inline-flex items-center gap-1.5">
+                                <svg
+                                    class="size-4"
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M2.5 16.5v-5.2h15v5.2"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
+                                    />
+                                    <path
+                                        d="M2.5 11.3V9.2A2.2 2.2 0 0 1 4.7 7h4.1A2.2 2.2 0 0 1 11 9.2v2.1"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                    <path
+                                        d="M2.5 16.5H17.5M4 16.5v1.2M16 16.5v1.2"
+                                        stroke-linecap="round"
                                     />
                                 </svg>
                                 {{ property.bedrooms }} chambres

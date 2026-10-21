@@ -14,7 +14,9 @@ const props = withDefaults(
 const page = usePage();
 const menuOpen = ref(false);
 const currentUrl = computed(() => page.url.split('?')[0] ?? '/');
-const overlay = computed(() => props.overlay || currentUrl.value === '/');
+const overlay = computed(
+    () => props.overlay || ['/', '/contact'].includes(currentUrl.value),
+);
 const logoSrc = computed(() =>
     overlay.value && !menuOpen.value
         ? '/assets/logo-dark.png'
