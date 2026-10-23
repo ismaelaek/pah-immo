@@ -17,11 +17,6 @@ const currentUrl = computed(() => page.url.split('?')[0] ?? '/');
 const overlay = computed(
     () => props.overlay || ['/', '/contact'].includes(currentUrl.value),
 );
-const logoSrc = computed(() =>
-    overlay.value && !menuOpen.value
-        ? '/assets/logo-dark.png'
-        : '/assets/logo.png',
-);
 
 const links = [
     { label: 'Accueil', href: '/' },
@@ -49,9 +44,9 @@ function isActive(href: string): boolean {
         >
             <Link href="/" class="relative z-10 shrink-0" prefetch>
                 <img
-                    :src="logoSrc"
+                    src="/assets/logo.png"
                     alt="PAH Immo"
-                    class="h-12 w-auto object-contain lg:h-14"
+                    class="h-14 w-auto object-contain lg:h-16"
                 />
             </Link>
 

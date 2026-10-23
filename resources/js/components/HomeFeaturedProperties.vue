@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 
+const deliveryStageLabels = {
+    'off-plan': 'Sur plan',
+    'under-construction': 'En construction',
+    ready: 'Prêt à livrer',
+} as const;
+
 const properties = [
     {
         title: 'Villa Horizon',
@@ -11,6 +17,7 @@ const properties = [
         surface: 220,
         type: 'Villa',
         status: 'À vendre',
+        stage: 'off-plan',
         webp: '/assets/images/home-hero.webp',
         jpg: '/assets/images/home-hero.jpg',
         alt: 'Villa contemporaine à vendre à Lyon, proposée par PAH Immo',
@@ -24,6 +31,7 @@ const properties = [
         surface: 165,
         type: 'Maison',
         status: 'À vendre',
+        stage: 'under-construction',
         webp: '/assets/images/highlights-1.webp',
         jpg: '/assets/images/highlights-1.jpg',
         alt: 'Maison avec piscine à vendre à Bordeaux, accompagnée par PAH Immo',
@@ -37,6 +45,7 @@ const properties = [
         surface: 280,
         type: 'Villa',
         status: 'À vendre',
+        stage: 'ready',
         webp: '/assets/images/highlights-2.webp',
         jpg: '/assets/images/highlights-2.jpg',
         alt: 'Villa blanche à vendre à Nice, sélectionnée par PAH Immo',
@@ -50,6 +59,7 @@ const properties = [
         surface: 92,
         type: 'Appartement',
         status: 'À louer',
+        stage: 'ready',
         webp: '/assets/images/living-room.webp',
         jpg: '/assets/images/living-room.jpg',
         alt: 'Salon d’un appartement lumineux à louer à Paris',
@@ -63,6 +73,7 @@ const properties = [
         surface: 148,
         type: 'Maison',
         status: 'À vendre',
+        stage: 'under-construction',
         webp: '/assets/images/kitchen.webp',
         jpg: '/assets/images/kitchen.jpg',
         alt: 'Cuisine d’une maison familiale à vendre à Lyon',
@@ -76,6 +87,7 @@ const properties = [
         surface: 78,
         type: 'Duplex',
         status: 'À louer',
+        stage: 'ready',
         webp: '/assets/images/bedroom.webp',
         jpg: '/assets/images/bedroom.jpg',
         alt: 'Chambre d’un duplex à louer à Bordeaux, proposé par PAH Immo',
@@ -113,15 +125,15 @@ const properties = [
             </div>
 
             <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                <Link
+                <article
                     v-for="property in properties"
                     :key="property.title"
-                    href="/properties"
-                    prefetch
-                    class="group flex flex-col gap-4"
+                    class="flex flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.06)]"
                 >
-                    <div
-                        class="relative overflow-hidden rounded-[1.75rem] shadow-[0_12px_40px_rgba(15,23,42,0.06)] transition-shadow duration-300 group-hover:shadow-[0_22px_50px_rgba(15,23,42,0.14)]"
+                    <Link
+                        href="/properties"
+                        prefetch
+                        class="group relative block overflow-hidden"
                     >
                         <picture>
                             <source
@@ -131,7 +143,7 @@ const properties = [
                             <img
                                 :src="property.jpg"
                                 :alt="property.alt"
-                                class="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                class="aspect-[16/10] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                             />
                         </picture>
 
@@ -149,9 +161,99 @@ const properties = [
                                 {{ property.type }}
                             </span>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div class="flex flex-col gap-2 px-1">
+                    <div class="flex flex-col gap-3 px-5 py-5">
+                        <h3
+                            class="text-2xl font-semibold tracking-tight text-neutral-950"
+                        >
+                            {{ property.title }}
+                        </h3>
+
+                        <p
+                            class="inline-flex items-start gap-1.5 text-sm text-neutral-500"
+                        >
+                            <svg
+                                class="mt-0.5 size-4 shrink-0"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M10 17s6-5.1 6-9.2A6 6 0 1 0 4 7.8C4 11.9 10 17 10 17Z"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <circle cx="10" cy="7.8" r="1.8" />
+                            </svg>
+                            {{ property.address }}
+                        </p>
+
+                        <p
+                            class="inline-flex items-center gap-1.5 text-sm text-neutral-500"
+                        >
+                            <svg
+                                v-if="property.stage === 'off-plan'"
+                                class="size-4 shrink-0"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M5 16.5V4.5h7l3 3v9H5Z"
+                                    stroke-linejoin="round"
+                                />
+                                <path
+                                    d="M12 4.5v3h3M7.5 10h5M7.5 13h3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            <svg
+                                v-else-if="
+                                    property.stage === 'under-construction'
+                                "
+                                class="size-4 shrink-0"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M4 16.5h4M6 16.5V6.5h9"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path
+                                    d="M6 8.5h10M13.5 8.5v4h3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            <svg
+                                v-else
+                                class="size-4 shrink-0"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                aria-hidden="true"
+                            >
+                                <circle cx="10" cy="10" r="6.5" />
+                                <path
+                                    d="m7.2 10.2 2 2 3.6-4"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            {{ deliveryStageLabels[property.stage] }}
+                        </p>
+
                         <p
                             class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-500"
                         >
@@ -239,20 +341,23 @@ const properties = [
                             </span>
                         </p>
 
-                        <h3
-                            class="text-xl font-semibold tracking-tight text-neutral-950 transition-colors group-hover:text-neutral-700"
-                        >
-                            {{ property.title }}
-                        </h3>
-                        <p class="text-sm text-neutral-500">
-                            <span class="font-medium text-brand-red">{{
-                                property.price
-                            }}</span>
-                            <span class="text-neutral-300"> – </span>
-                            {{ property.address }}
-                        </p>
+                        <div class="flex items-center justify-between gap-3">
+                            <p
+                                class="text-lg font-semibold text-brand-red sm:text-xl"
+                            >
+                                {{ property.price }}
+                            </p>
+                            <Link
+                                href="/properties"
+                                prefetch
+                                class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                            >
+                                Voir le bien
+                                <span aria-hidden="true">→</span>
+                            </Link>
+                        </div>
                     </div>
-                </Link>
+                </article>
             </div>
         </div>
     </section>
