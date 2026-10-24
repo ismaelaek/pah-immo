@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\MediaCollection;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -43,5 +45,16 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function withAvatar(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $avatars = File::files(database_path('factories/media/avatars'));
+
+            $user->addMedia(fake()->randomElement($avatars)->getPathname())
+                ->preservingOriginal()
+                ->toMediaCollection(MediaCollection::Avatar->value);
+        });
     }
 }

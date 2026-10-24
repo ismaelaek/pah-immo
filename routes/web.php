@@ -13,6 +13,11 @@ Route::inertia('/', 'Home', [
 Route::inertia('/about', 'About')->name('about');
 Route::inertia('/properties', 'Properties')->name('properties');
 Route::inertia('/blog', 'Blog')->name('blog');
+Route::get('/blog/{slug}', function (string $slug) {
+    return inertia('BlogShow', [
+        'slug' => $slug,
+    ]);
+})->name('blog.show');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1')
