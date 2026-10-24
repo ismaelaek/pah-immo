@@ -69,6 +69,10 @@ return [
 
     'timezone' => 'UTC',
 
+    'date_format' => 'd/m/Y',
+
+    'datetime_format' => 'd/m/Y H:i',
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Post;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -64,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
 
         Relation::enforceMorphMap([
             'user' => User::class,
+            'post' => Post::class,
         ]);
     }
 }

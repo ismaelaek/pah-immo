@@ -79,7 +79,7 @@ function isActive(href: string): boolean {
                 <Link
                     href="/contact"
                     prefetch
-                    class="cursor-pointer rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                    class="cursor-pointer rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
                     Contact
                 </Link>

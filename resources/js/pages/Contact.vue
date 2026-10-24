@@ -56,11 +56,14 @@ const inputClass =
                 />
 
                 <div
-                    class="relative flex min-h-svh flex-col justify-end gap-8 px-5 pt-28 pb-5 sm:px-8 lg:gap-10 lg:px-12 lg:pb-8"
+                    class="relative flex min-h-svh flex-col justify-end px-5 pt-28 pb-5 sm:px-8 lg:px-12 lg:pb-8"
                 >
-                    <div class="max-w-3xl">
+                    <div
+                        class="mx-auto flex w-full max-w-6xl flex-col gap-8 lg:gap-10"
+                    >
+                    <div class="text-center">
                         <h1
-                            class="max-w-3xl text-4xl leading-[1.05] font-semibold tracking-tight text-white text-shadow-lg sm:text-5xl lg:text-7xl"
+                            class="text-4xl leading-[1.05] font-semibold tracking-tight text-white text-shadow-lg sm:text-5xl lg:text-7xl"
                         >
                             Parlons de votre projet immobilier.
                         </h1>
@@ -197,6 +200,7 @@ const inputClass =
                             </button>
                         </div>
                     </form>
+                    </div>
                 </div>
             </div>
         </section>

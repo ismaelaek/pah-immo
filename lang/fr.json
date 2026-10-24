@@ -1,0 +1,15 @@
+{
+    "A short description of the post (will be used in meta tags).": "Une courte description de l'article (utilisée dans les balises meta).",
+    "Author": "Auteur",
+    "Content": "Contenu",
+    "Created at": "Créé le",
+    "Deleted at": "Supprimé le",
+    "Description": "Description",
+    "Draft": "Brouillon",
+    "Image": "Image",
+    "Published": "Publié",
+    "Slug": "Slug",
+    "Title": "Titre",
+    "Updated at": "Mis à jour le",
+    "Will be used in the URL of the post. Leave empty to generate slug automatically from title.": "Utilisé dans l'URL de l'article. Laissez vide pour générer le slug automatiquement à partir du titre."
+}

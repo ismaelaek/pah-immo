@@ -12,10 +12,13 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -32,6 +35,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection<int, Post> $posts
  */
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
@@ -39,6 +43,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, InteractsWithMedia, Notifiable;
+
+    /**
+     * @return HasMany<Post, $this>
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -74,12 +86,17 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        foreach (MediaConversion::cases() as $conversion) {
-            $this->addMediaConversion($conversion->value)
-                ->performOnCollections(MediaCollection::Avatar->value)
-                ->nonQueued()
-                ->width($conversion->width());
-        }
+        $this
+            ->addMediaConversion(MediaConversion::Small->value)
+            ->performOnCollections(MediaCollection::Avatar->value)
+            ->fit(Fit::Contain, 320, 320)
+            ->nonQueued();
+
+        $this
+            ->addMediaConversion(MediaConversion::Medium->value)
+            ->performOnCollections(MediaCollection::Avatar->value)
+            ->fit(Fit::Contain, 640, 640)
+            ->nonQueued();
     }
 
     /**

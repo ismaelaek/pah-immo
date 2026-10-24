@@ -5,11 +5,13 @@ export type BlogPost = {
     slug: string;
     title: string;
     description: string;
+    body?: string;
     author: string;
-    publishedAt: string;
-    webp: string;
-    jpg: string;
-    alt: string;
+    authorAvatar: string | null;
+    publishedAt: string | null;
+    publishedAtFormatted: string | null;
+    image: string | null;
+    imageAlt: string;
 };
 
 withDefaults(
@@ -31,31 +33,6 @@ function authorInitials(name: string): string {
         .join('');
 }
 
-function formatRelativeDate(isoDate: string): string {
-    const date = new Date(isoDate);
-    const diffInSeconds = Math.round((date.getTime() - Date.now()) / 1000);
-    const abs = Math.abs(diffInSeconds);
-
-    const divisions: [Intl.RelativeTimeFormatUnit, number][] = [
-        ['year', 60 * 60 * 24 * 365],
-        ['month', 60 * 60 * 24 * 30],
-        ['week', 60 * 60 * 24 * 7],
-        ['day', 60 * 60 * 24],
-        ['hour', 60 * 60],
-        ['minute', 60],
-        ['second', 1],
-    ];
-
-    const formatter = new Intl.RelativeTimeFormat('fr', { numeric: 'auto' });
-
-    for (const [unit, seconds] of divisions) {
-        if (abs >= seconds || unit === 'second') {
-            return formatter.format(Math.round(diffInSeconds / seconds), unit);
-        }
-    }
-
-    return formatter.format(0, 'second');
-}
 </script>
 
 <template>
@@ -71,19 +48,26 @@ function formatRelativeDate(isoDate: string): string {
             class="relative overflow-hidden"
             :class="featured ? 'lg:w-[52%]' : ''"
         >
-            <picture>
-                <source :srcset="post.webp" type="image/webp" />
-                <img
-                    :src="post.jpg"
-                    :alt="post.alt"
-                    class="w-full object-cover transition-transform duration-500 ease-out hover:scale-105"
-                    :class="
-                        featured
-                            ? 'aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-[22rem]'
-                            : 'aspect-[16/10]'
-                    "
-                />
-            </picture>
+            <img
+                v-if="post.image"
+                :src="post.image"
+                :alt="post.imageAlt"
+                class="w-full object-cover transition-transform duration-500 ease-out hover:scale-105"
+                :class="
+                    featured
+                        ? 'aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-[22rem]'
+                        : 'aspect-[16/10]'
+                "
+            />
+            <div
+                v-else
+                class="bg-neutral-100"
+                :class="
+                    featured
+                        ? 'aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-[22rem]'
+                        : 'aspect-[16/10]'
+                "
+            />
         </div>
 
         <div
@@ -117,7 +101,14 @@ function formatRelativeDate(isoDate: string): string {
                 class="mt-auto flex flex-wrap items-center justify-between gap-3 pt-1"
             >
                 <div class="flex min-w-0 items-center gap-3">
+                    <img
+                        v-if="post.authorAvatar"
+                        :src="post.authorAvatar"
+                        :alt="post.author"
+                        class="size-10 shrink-0 rounded-full object-cover"
+                    />
                     <span
+                        v-else
                         class="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-red text-xs font-semibold tracking-wide text-white"
                         aria-hidden="true"
                     >
@@ -129,10 +120,11 @@ function formatRelativeDate(isoDate: string): string {
                             {{ post.author }}
                         </p>
                         <time
+                            v-if="post.publishedAt"
                             class="text-sm text-neutral-500"
                             :datetime="post.publishedAt"
                         >
-                            {{ formatRelativeDate(post.publishedAt) }}
+                            {{ post.publishedAtFormatted }}
                         </time>
                     </div>
                 </div>

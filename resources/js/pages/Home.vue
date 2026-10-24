@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import type { BlogPost } from '@/components/BlogPostCard.vue';
 import HomeBestValue from '@/components/HomeBestValue.vue';
 import HomeFaq from '@/components/HomeFaq.vue';
 import HomeFeaturedProperties from '@/components/HomeFeaturedProperties.vue';
 import HomeHighlights from '@/components/HomeHighlights.vue';
+import HomeLatestArticles from '@/components/HomeLatestArticles.vue';
 
 defineOptions({
     layout: {
@@ -17,6 +19,7 @@ defineProps<{
         value: string;
         label: string;
     }[];
+    latestPosts: BlogPost[];
 }>();
 
 const prices = [
@@ -259,6 +262,7 @@ function searchProperties(): void {
         <HomeHighlights />
         <HomeFeaturedProperties />
         <HomeBestValue />
+        <HomeLatestArticles :posts="latestPosts" />
         <HomeFaq />
     </div>
 </template>
