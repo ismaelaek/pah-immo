@@ -1,28 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useLocale } from '@/composables/useLocale';
 
-const items = [
-    {
-        question: 'Quels types de biens accompagnez-vous ?',
-        answer: 'PAH Immo, agence immobilière, vous accompagne pour vendre, acheter ou louer une maison, un appartement, une villa, un studio, un duplex, un bureau ou un local commercial. Chaque bien est sélectionné selon votre projet, votre budget et le quartier recherché.',
-    },
-    {
-        question: 'Comment savoir si un bien est un bon investissement ?',
-        answer: 'Nous analysons le prix au mètre carré, le potentiel locatif, l’état du bien et la demande du secteur. Vous recevez une lecture claire du marché pour décider en toute confiance, que vous souhaitiez habiter le bien ou le mettre en location.',
-    },
-    {
-        question: 'Pourquoi passer par une agence immobilière ?',
-        answer: 'Un conseiller PAH Immo estime le bien, organise les visites, négocie et sécurise les étapes jusqu’à la signature. Vous gagnez du temps, évitez les mauvaises surprises et restez accompagné à chaque décision.',
-    },
-    {
-        question: 'Comment se déroule un achat ou une vente ?',
-        answer: 'Après un premier échange, nous définissons vos critères, présentons des biens adaptés, planifions les visites puis suivons l’offre, les diagnostics et le rendez-vous chez le notaire. Le même suivi s’applique si vous vendez : estimation, diffusion et accompagnement jusqu’à la vente.',
-    },
-    {
-        question: 'Puis-je visiter un bien avant d’acheter ou de louer ?',
-        answer: 'Oui. Les visites se font sur rendez-vous, seules ou accompagnées de votre conseiller. Vous prenez le temps d’évaluer le bien, le quartier et les prestations avant toute décision.',
-    },
-] as const;
+const { t, trans } = useLocale();
+
+const items = computed(
+    () =>
+        trans<{ question: string; answer: string }[]>('faq.items') ?? [],
+);
 
 const openIndex = ref(0);
 
@@ -41,15 +26,14 @@ function toggle(index: number): void {
                 class="mb-10 flex flex-col gap-6 lg:mb-14 lg:flex-row lg:items-end lg:justify-between"
             >
                 <h2
-                    class="whitespace-nowrap text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
+                    class="text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
                 >
-                    Questions fréquentes
+                    {{ t('faq.title') }}
                 </h2>
                 <p
                     class="max-w-lg text-sm leading-6 text-neutral-500 lg:text-right"
                 >
-                    PAH Immo vous accompagne pour vendre, acheter ou louer un
-                    bien : prix, visites et démarches jusqu’à la signature.
+                    {{ t('faq.intro') }}
                 </p>
             </div>
 

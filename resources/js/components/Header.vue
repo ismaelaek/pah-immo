@@ -14,17 +14,17 @@ const props = withDefaults(
 );
 
 const menuOpen = ref(false);
-const { localized, path } = useLocale();
+const { localized, path, t } = useLocale();
 const overlay = computed(
     () => props.overlay || ['/', '/contact'].includes(path.value),
 );
 
-const links = [
-    { label: 'Accueil', href: '/' },
-    { label: 'Biens', href: '/properties' },
-    { label: 'À propos', href: '/about' },
-    { label: 'Blog', href: '/blog' },
-] as const;
+const links = computed(() => [
+    { label: t('nav.home'), href: '/' },
+    { label: t('nav.properties'), href: '/properties' },
+    { label: t('nav.about'), href: '/about' },
+    { label: t('nav.blog'), href: '/blog' },
+]);
 
 function isActive(href: string): boolean {
     if (href === '/') {
@@ -58,7 +58,7 @@ function isActive(href: string): boolean {
                         ? 'border border-white/50 bg-white/40 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl'
                         : 'bg-white shadow-[0_8px_30px_rgba(15,23,42,0.08)]'
                 "
-                aria-label="Primary"
+                :aria-label="t('nav.primary')"
             >
                 <Link
                     v-for="link in links"
@@ -84,7 +84,7 @@ function isActive(href: string): boolean {
                     prefetch
                     class="cursor-pointer rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
-                    Contact
+                    {{ t('nav.contact') }}
                 </Link>
 
                 <button
@@ -96,7 +96,7 @@ function isActive(href: string): boolean {
                             : 'border-neutral-200 text-neutral-900'
                     "
                     :aria-expanded="menuOpen"
-                    aria-label="Toggle menu"
+                    :aria-label="t('nav.toggle_menu')"
                     @click="menuOpen = !menuOpen"
                 >
                     <svg
@@ -133,7 +133,7 @@ function isActive(href: string): boolean {
                 v-if="menuOpen"
                 class="fixed inset-x-0 top-0 z-40 min-h-svh bg-white/95 pt-24 backdrop-blur-xl lg:hidden"
             >
-                <nav class="flex flex-col gap-2 px-5 py-6" aria-label="Mobile">
+                <nav class="flex flex-col gap-2 px-5 py-6" :aria-label="t('nav.mobile')">
                     <Link
                         v-for="link in links"
                         :key="link.href"

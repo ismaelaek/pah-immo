@@ -11,7 +11,7 @@ defineOptions({
 });
 
 const page = usePage();
-const { localized } = useLocale();
+const { localized, t } = useLocale();
 const sent = computed(() => Boolean(page.flash.success));
 const form = useForm({
     first_name: '',
@@ -33,11 +33,11 @@ const inputClass =
 
 <template>
     <div>
-        <Head title="Contact">
+        <Head :title="t('contact.title')">
             <meta
                 head-key="description"
                 name="description"
-                content="Contactez PAH Immo, agence immobilière : un conseiller vous accompagne pour vendre, acheter ou louer un bien."
+                :content="t('contact.description')"
             />
         </Head>
 
@@ -50,7 +50,7 @@ const inputClass =
                     />
                     <img
                         src="/assets/images/hero-contact.jpg"
-                        alt="Villa contemporaine avec piscine proposée par PAH Immo"
+                        :alt="t('contact.hero_alt')"
                         class="absolute inset-0 size-full object-cover"
                     />
                 </picture>
@@ -69,7 +69,7 @@ const inputClass =
                         <h1
                             class="text-4xl leading-[1.05] font-semibold tracking-tight text-white text-shadow-lg sm:text-5xl lg:text-7xl"
                         >
-                            Parlons de votre projet immobilier.
+                            {{ t('contact.hero_title') }}
                         </h1>
                     </div>
 
@@ -80,7 +80,7 @@ const inputClass =
                             class="text-2xl font-semibold tracking-tight text-neutral-950 lg:text-3xl"
                             :class="sent ? 'mb-8' : 'mb-6'"
                         >
-                            Écrivez-nous
+                            {{ t('contact.form_title') }}
                         </h2>
 
                         <div
@@ -118,7 +118,7 @@ const inputClass =
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Prénom
+                                    {{ t('contact.first_name') }}
                                 </span>
                                 <input
                                     v-model="form.first_name"
@@ -139,7 +139,7 @@ const inputClass =
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Nom
+                                    {{ t('contact.last_name') }}
                                 </span>
                                 <input
                                     v-model="form.last_name"
@@ -160,7 +160,7 @@ const inputClass =
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    E-mail
+                                    {{ t('contact.email') }}
                                 </span>
                                 <input
                                     v-model="form.email"
@@ -181,7 +181,7 @@ const inputClass =
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Téléphone
+                                    {{ t('contact.phone') }}
                                 </span>
                                 <input
                                     v-model="form.phone"
@@ -201,7 +201,7 @@ const inputClass =
 
                         <label class="mb-6 flex flex-col gap-2">
                             <span class="text-sm font-medium text-neutral-800">
-                                Message
+                                {{ t('contact.message') }}
                             </span>
                             <textarea
                                 v-model="form.message"
@@ -223,7 +223,11 @@ const inputClass =
                                 :disabled="form.processing"
                                 class="cursor-pointer rounded-full bg-brand-red px-7 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
                             >
-                                {{ form.processing ? 'Envoi…' : 'Envoyer' }}
+                                {{
+                                    form.processing
+                                        ? t('contact.sending')
+                                        : t('contact.send')
+                                }}
                             </button>
                         </div>
                         </form>

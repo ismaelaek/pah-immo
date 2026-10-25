@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import { useLocale } from '@/composables/useLocale';
 
-const { localized } = useLocale();
+const { localized, t } = useLocale();
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const { localized } = useLocale();
                     />
                     <img
                         src="/assets/images/dream-house.jpg"
-                        alt="Carte d’un quartier avec commerces, transports et services autour d’une maison sélectionnée par PAH Immo"
+                        :alt="t('best_value.alt')"
                         class="w-full"
                         width="1400"
                         height="700"
@@ -27,20 +27,17 @@ const { localized } = useLocale();
                     <h2
                         class="max-w-lg text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
                     >
-                        Découvrez les biens avec la meilleure valeur
+                        {{ t('best_value.title') }}
                     </h2>
                     <p class="max-w-md text-sm leading-6 text-neutral-500">
-                        Commerces, transports, écoles et espaces verts : nous
-                        sélectionnons des biens à vendre ou à louer pour leur
-                        emplacement, leur prix et leur potentiel, afin que
-                        chaque mètre carré compte vraiment.
+                        {{ t('best_value.body') }}
                     </p>
                     <Link
                         :href="localized('/properties')"
                         prefetch
                         class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >
-                        Voir les biens à proximité
+                        {{ t('best_value.cta') }}
                         <span aria-hidden="true">→</span>
                     </Link>
                 </div>

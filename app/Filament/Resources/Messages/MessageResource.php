@@ -22,13 +22,22 @@ class MessageResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
-    protected static ?string $navigationLabel = 'Messages';
-
-    protected static ?string $modelLabel = 'message';
-
-    protected static ?string $pluralModelLabel = 'messages';
-
     protected static ?string $recordTitleAttribute = 'full_name';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Messages');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('message');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages');
+    }
 
     public static function infolist(Schema $schema): Schema
     {

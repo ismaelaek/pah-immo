@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import { useLocale } from '@/composables/useLocale';
 
-const { localized } = useLocale();
+const { localized, t } = useLocale();
 
 export type BlogPost = {
     slug: string;
@@ -48,15 +48,17 @@ function authorInitials(name: string): string {
                 : 'flex-col shadow-[0_12px_40px_rgba(15,23,42,0.06)]'
         "
     >
-        <div
-            class="relative overflow-hidden"
+        <Link
+            :href="localized(`/blog/${post.slug}`)"
+            prefetch
+            class="group relative block overflow-hidden"
             :class="featured ? 'lg:w-[52%]' : ''"
         >
             <img
                 v-if="post.image"
                 :src="post.image"
                 :alt="post.imageAlt"
-                class="w-full object-cover transition-transform duration-500 ease-out hover:scale-105"
+                class="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 :class="
                     featured
                         ? 'aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-[22rem]'
@@ -72,7 +74,7 @@ function authorInitials(name: string): string {
                         : 'aspect-[16/10]'
                 "
             />
-        </div>
+        </Link>
 
         <div
             class="flex flex-1 flex-col gap-4"
@@ -138,7 +140,7 @@ function authorInitials(name: string): string {
                     prefetch
                     class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
-                    Lire plus
+                    {{ t('blog.read_more') }}
                     <span aria-hidden="true">→</span>
                 </Link>
             </div>

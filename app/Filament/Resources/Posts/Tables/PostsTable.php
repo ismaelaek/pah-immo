@@ -26,10 +26,12 @@ class PostsTable
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make('image')
+                    ->label(__('Image'))
                     ->collection(MediaCollection::Images->value)
                     ->conversion(MediaConversion::Small->value)
                     ->square(),
                 TextColumn::make('title')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable()
                     ->limit(50),
@@ -46,6 +48,7 @@ class PostsTable
                     ->sortable()
                     ->numeric(),
                 TextColumn::make('created_at')
+                    ->label(__('Created at'))
                     ->dateTime(config('app.datetime_format')),
             ])
             ->defaultSort('created_at', 'desc')

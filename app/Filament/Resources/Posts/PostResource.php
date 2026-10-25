@@ -26,13 +26,22 @@ class PostResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
-    protected static ?string $navigationLabel = 'Blog';
-
-    protected static ?string $modelLabel = 'article';
-
-    protected static ?string $pluralModelLabel = 'articles';
-
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Blog');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('article');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('articles');
+    }
 
     public static function form(Schema $schema): Schema
     {

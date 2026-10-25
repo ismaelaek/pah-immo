@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useLocale } from '@/composables/useLocale';
 
 const props = withDefaults(
@@ -11,11 +12,32 @@ const props = withDefaults(
     },
 );
 
-const { locale, locales, switchUrl } = useLocale();
+const { locale, locales, switchUrl, t } = useLocale();
+const root = ref<HTMLDetailsElement | null>(null);
+
+function closeOnOutsideClick(event: PointerEvent): void {
+    const target = event.target;
+
+    if (!(target instanceof Node) || root.value === null || !root.value.open) {
+        return;
+    }
+
+    if (!root.value.contains(target)) {
+        root.value.open = false;
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('pointerdown', closeOnOutsideClick);
+});
 </script>
 
 <template>
-    <details :key="locale" class="relative">
+    <details ref="root" :key="locale" class="relative">
         <summary
             class="flex cursor-pointer list-none items-center gap-1.5 rounded-full border px-3.5 py-2.5 text-sm font-medium uppercase transition-colors [&::-webkit-details-marker]:hidden"
             :class="
@@ -23,7 +45,7 @@ const { locale, locales, switchUrl } = useLocale();
                     ? 'border-white/70 text-white hover:border-white hover:bg-white/15'
                     : 'border-neutral-200 text-neutral-900 hover:border-neutral-300 hover:bg-neutral-50'
             "
-            aria-label="Langue"
+            :aria-label="t('nav.language')"
         >
             {{ locale }}
             <svg

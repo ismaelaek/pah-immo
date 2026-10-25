@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { useLocale } from '@/composables/useLocale';
+
+const { t } = useLocale();
 </script>
 
 <template>
     <div>
-        <Head title="À propos" />
+        <Head :title="t('about.title')" />
     </div>
 </template>

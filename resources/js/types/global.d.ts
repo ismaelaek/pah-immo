@@ -18,6 +18,7 @@ declare module '@inertiajs/core' {
                 value: string;
                 label: string;
             }[];
+            translations: Record<string, unknown>;
             auth: {
                 user: {
                     id: number;

@@ -43,6 +43,12 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'locale' => fn (): string => app()->getLocale(),
             'locales' => Locale::options(),
+            'translations' => function (): array {
+                /** @var array<string, mixed>|string $translations */
+                $translations = trans('front');
+
+                return is_array($translations) ? $translations : [];
+            },
             'auth' => [
                 'user' => $request->user(),
             ],

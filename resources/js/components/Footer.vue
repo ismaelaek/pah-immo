@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { useLocale } from '@/composables/useLocale';
 
-const { localized } = useLocale();
+const { localized, t } = useLocale();
 
 const year = new Date().getFullYear();
 
-const leftLinks = [
-    { label: 'Accueil', href: '/' },
-    { label: 'À propos', href: '/about' },
-    { label: 'Biens', href: '/properties' },
-] as const;
+const leftLinks = computed(() => [
+    { label: t('nav.home'), href: '/' },
+    { label: t('nav.about'), href: '/about' },
+    { label: t('nav.properties'), href: '/properties' },
+]);
 
-const rightLinks = [
-    { label: 'Blog', href: '/blog' },
-    { label: 'FAQ', href: '/#faq' },
-    { label: 'Contact', href: '/contact' },
-] as const;
+const rightLinks = computed(() => [
+    { label: t('nav.blog'), href: '/blog' },
+    { label: t('nav.faq'), href: '/#faq' },
+    { label: t('nav.contact'), href: '/contact' },
+]);
 </script>
 
 <template>
@@ -27,7 +28,7 @@ const rightLinks = [
             >
                 <nav
                     class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-neutral-500 lg:justify-start"
-                    aria-label="Pied de page"
+                    :aria-label="t('nav.footer')"
                 >
                     <Link
                         v-for="link in leftLinks"
@@ -54,7 +55,7 @@ const rightLinks = [
 
                 <nav
                     class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-neutral-500 lg:justify-end"
-                    aria-label="Pied de page secondaire"
+                    :aria-label="t('nav.footer_secondary')"
                 >
                     <Link
                         v-for="link in rightLinks"
@@ -71,21 +72,21 @@ const rightLinks = [
             <div
                 class="flex flex-col items-center gap-4 py-8 text-sm text-neutral-400 sm:flex-row sm:justify-between"
             >
-                <p>© {{ year }} PAH Immo. Tous droits réservés.</p>
+                <p>{{ t('footer.rights', { year }) }}</p>
                 <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
                     <Link
                         :href="localized('/mentions-legales')"
                         prefetch
                         class="transition-colors hover:text-neutral-700"
                     >
-                        Mentions légales
+                        {{ t('nav.legal') }}
                     </Link>
                     <Link
                         :href="localized('/confidentialite')"
                         prefetch
                         class="transition-colors hover:text-neutral-700"
                     >
-                        Politique de confidentialité
+                        {{ t('nav.privacy') }}
                     </Link>
                 </div>
             </div>

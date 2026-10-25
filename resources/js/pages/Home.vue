@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { BlogPost } from '@/components/BlogPostCard.vue';
 import HomeBestValue from '@/components/HomeBestValue.vue';
 import HomeFaq from '@/components/HomeFaq.vue';
 import HomeFeaturedProperties from '@/components/HomeFeaturedProperties.vue';
 import HomeHighlights from '@/components/HomeHighlights.vue';
 import HomeLatestArticles from '@/components/HomeLatestArticles.vue';
+import { useLocale } from '@/composables/useLocale';
 
 defineOptions({
     layout: {
@@ -22,32 +23,26 @@ defineProps<{
     latestPosts: BlogPost[];
 }>();
 
-const prices = [
-    'Tous les prix',
-    'Moins de 250 000 €',
-    '250 – 500 000 €',
-    '500 000 – 1 M €',
-    'Plus de 1 M €',
-];
-const locations = [
-    'Toute la France',
-    'Paris',
-    'Lyon',
-    'Bordeaux',
-    'Nice',
-];
-const rooms = [
-    'Studio',
-    '1 chambre',
-    '2 chambres',
-    '3 chambres',
-    '4 chambres et plus',
-];
+const { t } = useLocale();
+
+const priceKeys = ['all', 'under_250', '250_500', '500_1m', 'over_1m'] as const;
+const locationKeys = ['all', 'paris', 'lyon', 'bordeaux', 'nice'] as const;
+const roomKeys = ['studio', '1', '2', '3', '4'] as const;
+
+const prices = computed(() =>
+    priceKeys.map((value) => ({ value, label: t(`home.prices.${value}`) })),
+);
+const locations = computed(() =>
+    locationKeys.map((value) => ({ value, label: t(`home.locations.${value}`) })),
+);
+const rooms = computed(() =>
+    roomKeys.map((value) => ({ value, label: t(`home.room_options.${value}`) })),
+);
 
 const propertyType = ref('');
 const price = ref('');
 const location = ref('');
-const roomCount = ref('2 chambres');
+const roomCount = ref('2');
 
 function searchProperties(): void {
     // Search will be wired to listings in a later page.
@@ -56,11 +51,11 @@ function searchProperties(): void {
 
 <template>
     <div>
-        <Head title="Agence immobilière">
+        <Head :title="t('home.title')">
             <meta
                 head-key="description"
                 name="description"
-                content="PAH Immo, agence immobilière : vente, achat et location de villas, maisons et appartements. Trouvez le bien idéal avec un accompagnement personnalisé."
+                :content="t('home.description')"
             />
         </Head>
 
@@ -73,7 +68,7 @@ function searchProperties(): void {
                     />
                     <img
                         src="/assets/images/home-hero.jpg"
-                        alt="Villa contemporaine proposée par PAH Immo, agence immobilière"
+                        :alt="t('home.hero_alt')"
                         class="absolute inset-0 size-full object-cover"
                     />
                 </picture>
@@ -89,8 +84,7 @@ function searchProperties(): void {
                         <h1
                             class="max-w-3xl text-4xl leading-[1.05] font-semibold tracking-tight text-white text-shadow-lg sm:text-5xl lg:text-7xl"
                         >
-                            Trouvez le bien immobilier qui construit votre
-                            avenir.
+                            {{ t('home.hero_title') }}
                         </h1>
                     </div>
 
@@ -101,7 +95,7 @@ function searchProperties(): void {
                         <h2
                             class="mb-6 text-2xl font-semibold tracking-tight text-neutral-950 lg:text-3xl"
                         >
-                            Trouvez le bien idéal
+                            {{ t('home.search_title') }}
                         </h2>
 
                         <div
@@ -111,7 +105,7 @@ function searchProperties(): void {
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Type de bien
+                                    {{ t('home.type') }}
                                 </span>
                                 <select
                                     v-model="propertyType"
@@ -124,7 +118,7 @@ function searchProperties(): void {
                                     "
                                 >
                                     <option disabled value="">
-                                        Tous les types
+                                        {{ t('home.all_types') }}
                                     </option>
                                     <option
                                         v-for="type in propertyTypes"
@@ -150,7 +144,7 @@ function searchProperties(): void {
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Prix
+                                    {{ t('home.price') }}
                                 </span>
                                 <select
                                     v-model="price"
@@ -158,14 +152,14 @@ function searchProperties(): void {
                                     class="h-12 appearance-none rounded-full bg-[#F3F3F3] px-5 pr-12 text-sm text-neutral-500 outline-none focus:ring-2 focus:ring-neutral-200"
                                 >
                                     <option disabled value="">
-                                        Tous les prix
+                                        {{ t('home.prices.all') }}
                                     </option>
                                     <option
                                         v-for="option in prices"
-                                        :key="option"
-                                        :value="option"
+                                        :key="option.value"
+                                        :value="option.value"
                                     >
-                                        {{ option }}
+                                        {{ option.label }}
                                     </option>
                                 </select>
                                 <svg
@@ -184,7 +178,7 @@ function searchProperties(): void {
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Ville
+                                    {{ t('home.city') }}
                                 </span>
                                 <select
                                     v-model="location"
@@ -192,14 +186,14 @@ function searchProperties(): void {
                                     class="h-12 appearance-none rounded-full bg-[#F3F3F3] px-5 pr-12 text-sm text-neutral-500 outline-none focus:ring-2 focus:ring-neutral-200"
                                 >
                                     <option disabled value="">
-                                        Toutes les villes
+                                        {{ t('home.all_cities') }}
                                     </option>
                                     <option
                                         v-for="option in locations"
-                                        :key="option"
-                                        :value="option"
+                                        :key="option.value"
+                                        :value="option.value"
                                     >
-                                        {{ option }}
+                                        {{ option.label }}
                                     </option>
                                 </select>
                                 <svg
@@ -218,7 +212,7 @@ function searchProperties(): void {
                                 <span
                                     class="text-sm font-medium text-neutral-800"
                                 >
-                                    Pièces
+                                    {{ t('home.rooms') }}
                                 </span>
                                 <select
                                     v-model="roomCount"
@@ -227,10 +221,10 @@ function searchProperties(): void {
                                 >
                                     <option
                                         v-for="option in rooms"
-                                        :key="option"
-                                        :value="option"
+                                        :key="option.value"
+                                        :value="option.value"
                                     >
-                                        {{ option }}
+                                        {{ option.label }}
                                     </option>
                                 </select>
                                 <svg
@@ -249,7 +243,7 @@ function searchProperties(): void {
                                 type="submit"
                                 class="h-12 cursor-pointer justify-self-end rounded-full bg-brand-red px-7 text-sm font-semibold whitespace-nowrap text-white transition-opacity hover:opacity-90"
                             >
-                                Rechercher
+                                {{ t('home.search') }}
                             </button>
                         </div>
                     </form>

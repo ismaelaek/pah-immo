@@ -34,11 +34,11 @@ class StoreMessageRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'first_name' => 'prénom',
-            'last_name' => 'nom',
-            'email' => 'e-mail',
-            'phone' => 'téléphone',
-            'message' => 'message',
+            'first_name' => __('front.contact.first_name'),
+            'last_name' => __('front.contact.last_name'),
+            'email' => __('front.contact.email'),
+            'phone' => __('front.contact.phone'),
+            'message' => __('front.contact.message'),
         ];
     }
 
@@ -48,13 +48,13 @@ class StoreMessageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'first_name.required' => 'Indiquez votre prénom.',
-            'last_name.required' => 'Indiquez votre nom.',
-            'email.required' => 'Indiquez votre adresse e-mail.',
-            'email.email' => 'Indiquez une adresse e-mail valide.',
-            'phone.required' => 'Indiquez votre numéro de téléphone.',
-            'message.required' => 'Écrivez votre message.',
-            'message.max' => 'Le message ne peut pas dépasser 2000 caractères.',
+            'first_name.required' => __('front.contact.errors.first_name_required'),
+            'last_name.required' => __('front.contact.errors.last_name_required'),
+            'email.required' => __('front.contact.errors.email_required'),
+            'email.email' => __('front.contact.errors.email_email'),
+            'phone.required' => __('front.contact.errors.phone_required'),
+            'message.required' => __('front.contact.errors.message_required'),
+            'message.max' => __('front.contact.errors.message_max'),
         ];
     }
 }

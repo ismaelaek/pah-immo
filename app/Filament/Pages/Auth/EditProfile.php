@@ -47,7 +47,7 @@ class EditProfile extends BaseEditProfile
     protected function getAvatarFormComponent(): Component
     {
         return SpatieMediaLibraryFileUpload::make('avatar')
-            ->label('Avatar')
+            ->label(__('Avatar'))
             ->collection(MediaCollection::Avatar->value)
             ->disk('public')
             ->visibility('public')

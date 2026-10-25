@@ -1,27 +1,32 @@
 <script setup lang="ts">
-const items = [
+import { computed } from 'vue';
+import { useLocale } from '@/composables/useLocale';
+
+const { t } = useLocale();
+
+const items = computed(() => [
     {
         icon: 'pin',
-        title: 'Adresse',
-        body: 'PAH Immo, agence immobilière en France. Rendez-vous sur demande à Paris, Lyon, Bordeaux et Nice.',
+        title: t('contact.info.address_title'),
+        body: t('contact.info.address_body'),
         href: null,
         link: null,
     },
     {
         icon: 'mail',
-        title: 'Écrire à l’équipe',
+        title: t('contact.info.email_title'),
         body: 'contact@pah-immo.fr',
         href: 'mailto:contact@pah-immo.fr',
         link: null,
     },
     {
         icon: 'phone',
-        title: 'Un conseiller à votre écoute',
-        body: 'Nos conseillers vous accompagnent pour vendre, acheter ou louer un bien, du premier échange jusqu’à la signature.',
+        title: t('contact.info.phone_title'),
+        body: t('contact.info.phone_body'),
         href: 'tel:+33186260000',
         link: '+33 1 86 26 00 00',
     },
-] as const;
+]);
 </script>
 
 <template>

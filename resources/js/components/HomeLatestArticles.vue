@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import BlogPostCard from '@/components/BlogPostCard.vue';
+import type { BlogPost } from '@/components/BlogPostCard.vue';
 import { useLocale } from '@/composables/useLocale';
 
-const { localized } = useLocale();
-import type { BlogPost } from '@/components/BlogPostCard.vue';
+const { localized, t } = useLocale();
 
 defineProps<{
     posts: BlogPost[];
@@ -21,11 +21,10 @@ defineProps<{
                     <h2
                         class="text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
                     >
-                        Les derniers articles
+                        {{ t('blog.latest') }}
                     </h2>
                     <p class="mt-4 text-sm leading-6 text-neutral-500">
-                        Conseils, tendances et coulisses de l’agence pour vendre,
-                        acheter ou louer en toute confiance.
+                        {{ t('blog.latest_intro') }}
                     </p>
                 </div>
 
@@ -34,7 +33,7 @@ defineProps<{
                     prefetch
                     class="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
-                    Voir tous les articles
+                    {{ t('blog.see_all') }}
                     <span aria-hidden="true">→</span>
                 </Link>
             </div>
@@ -50,7 +49,7 @@ defineProps<{
                 />
             </div>
             <p v-else class="text-sm leading-6 text-neutral-500">
-                Aucun article pour le moment.
+                {{ t('blog.empty') }}
             </p>
         </div>
     </section>

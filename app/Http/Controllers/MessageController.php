@@ -43,7 +43,7 @@ class MessageController extends Controller
 
         return Inertia::flash(
             'success',
-            'Votre message a bien été envoyé. Un conseiller PAH Immo vous répondra rapidement.',
+            __('front.contact.success'),
         )->back();
     }
 }

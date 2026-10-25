@@ -2,98 +2,92 @@
 import { Link } from '@inertiajs/vue3';
 import { useLocale } from '@/composables/useLocale';
 
-const { localized } = useLocale();
-
-const deliveryStageLabels = {
-    'off-plan': 'Sur plan',
-    'under-construction': 'En construction',
-    ready: 'Prêt à livrer',
-} as const;
+const { localized, t, tc } = useLocale();
 
 const properties = [
     {
+        key: 'horizon',
         title: 'Villa Horizon',
         price: '785 000 €',
         address: '14 rue des Tilleuls, Lyon',
         bedrooms: 5,
         bathrooms: 2,
         surface: 220,
-        type: 'Villa',
-        status: 'À vendre',
+        type: 'villa',
+        status: 'sale',
         stage: 'off-plan',
         webp: '/assets/images/home-hero.webp',
         jpg: '/assets/images/home-hero.jpg',
-        alt: 'Villa contemporaine à vendre à Lyon, proposée par PAH Immo',
     },
     {
+        key: 'parc',
         title: 'Maison du Parc',
         price: '620 000 €',
         address: '8 avenue Victor Hugo, Bordeaux',
         bedrooms: 4,
         bathrooms: 2,
         surface: 165,
-        type: 'Maison',
-        status: 'À vendre',
+        type: 'house',
+        status: 'sale',
         stage: 'under-construction',
         webp: '/assets/images/highlights-1.webp',
         jpg: '/assets/images/highlights-1.jpg',
-        alt: 'Maison avec piscine à vendre à Bordeaux, accompagnée par PAH Immo',
     },
     {
+        key: 'cote',
         title: 'Villa Côte Sud',
         price: '1 150 000 €',
         address: '22 promenade des Pins, Nice',
         bedrooms: 5,
         bathrooms: 3,
         surface: 280,
-        type: 'Villa',
-        status: 'À vendre',
+        type: 'villa',
+        status: 'sale',
         stage: 'ready',
         webp: '/assets/images/highlights-2.webp',
         jpg: '/assets/images/highlights-2.jpg',
-        alt: 'Villa blanche à vendre à Nice, sélectionnée par PAH Immo',
     },
     {
+        key: 'lumiere',
         title: 'Appartement Lumière',
         price: '2 450 € / mois',
         address: '31 rue Saint-Honoré, Paris',
         bedrooms: 3,
         bathrooms: 2,
         surface: 92,
-        type: 'Appartement',
-        status: 'À louer',
+        type: 'apartment',
+        status: 'rent',
         stage: 'ready',
         webp: '/assets/images/living-room.webp',
         jpg: '/assets/images/living-room.jpg',
-        alt: 'Salon d’un appartement lumineux à louer à Paris',
     },
     {
+        key: 'michel',
         title: 'Maison Saint-Michel',
         price: '540 000 €',
         address: '5 place Saint-Michel, Lyon',
         bedrooms: 4,
         bathrooms: 2,
         surface: 148,
-        type: 'Maison',
-        status: 'À vendre',
+        type: 'house',
+        status: 'sale',
         stage: 'under-construction',
         webp: '/assets/images/kitchen.webp',
         jpg: '/assets/images/kitchen.jpg',
-        alt: 'Cuisine d’une maison familiale à vendre à Lyon',
     },
     {
+        key: 'jardins',
         title: 'Duplex des Jardins',
         price: '1 390 € / mois',
         address: '17 cours de l’Intendance, Bordeaux',
         bedrooms: 3,
         bathrooms: 1,
         surface: 78,
-        type: 'Duplex',
-        status: 'À louer',
+        type: 'duplex',
+        status: 'rent',
         stage: 'ready',
         webp: '/assets/images/bedroom.webp',
         jpg: '/assets/images/bedroom.jpg',
-        alt: 'Chambre d’un duplex à louer à Bordeaux, proposé par PAH Immo',
     },
 ] as const;
 </script>
@@ -108,12 +102,10 @@ const properties = [
                     <h2
                         class="text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
                     >
-                        Découvrez nos biens d’exception
+                        {{ t('featured.title') }}
                     </h2>
                     <p class="mt-4 text-sm leading-6 text-neutral-500">
-                        Chaque annonce met en avant un bien unique : emplacement
-                        recherché, prestations soignées et un accompagnement PAH
-                        Immo pour vendre, acheter ou louer en toute confiance.
+                        {{ t('featured.intro') }}
                     </p>
                 </div>
 
@@ -122,7 +114,7 @@ const properties = [
                     prefetch
                     class="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
-                    Voir tous les biens
+                    {{ t('featured.see_all') }}
                     <span aria-hidden="true">→</span>
                 </Link>
             </div>
@@ -145,7 +137,7 @@ const properties = [
                             />
                             <img
                                 :src="property.jpg"
-                                :alt="property.alt"
+                                :alt="t(`featured.alts.${property.key}`)"
                                 class="aspect-[16/10] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                             />
                         </picture>
@@ -156,12 +148,12 @@ const properties = [
                             <span
                                 class="rounded-full bg-brand-red px-4 py-1.5 text-sm font-medium text-white shadow-sm"
                             >
-                                {{ property.status }}
+                                {{ t(`property.statuses.${property.status}`) }}
                             </span>
                             <span
                                 class="rounded-full bg-white px-4 py-1.5 text-sm font-medium text-neutral-900 shadow-sm"
                             >
-                                {{ property.type }}
+                                {{ t(`property.types.${property.type}`) }}
                             </span>
                         </div>
                     </Link>
@@ -254,7 +246,7 @@ const properties = [
                                     stroke-linejoin="round"
                                 />
                             </svg>
-                            {{ deliveryStageLabels[property.stage] }}
+                            {{ t(`property.stages.${property.stage}`) }}
                         </p>
 
                         <p
@@ -308,7 +300,7 @@ const properties = [
                                         stroke-linecap="round"
                                     />
                                 </svg>
-                                {{ property.bedrooms }} chambres
+                                {{ tc('property.bedrooms', property.bedrooms) }}
                             </span>
                             <span class="text-neutral-300">·</span>
                             <span class="inline-flex items-center gap-1.5">
@@ -335,11 +327,11 @@ const properties = [
                                         stroke-linecap="round"
                                     />
                                 </svg>
-                                {{ property.bathrooms }}
                                 {{
-                                    property.bathrooms > 1
-                                        ? 'salles de bain'
-                                        : 'salle de bain'
+                                    tc(
+                                        'property.bathrooms',
+                                        property.bathrooms,
+                                    )
                                 }}
                             </span>
                         </p>
@@ -355,7 +347,7 @@ const properties = [
                                 prefetch
                                 class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                             >
-                                Voir le bien
+                                {{ t('featured.see_property') }}
                                 <span aria-hidden="true">→</span>
                             </Link>
                         </div>

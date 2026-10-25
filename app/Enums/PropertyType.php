@@ -35,14 +35,14 @@ enum PropertyType: string implements HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Apartment => 'Appartement',
-            self::House => 'Maison',
-            self::Villa => 'Villa',
-            self::Studio => 'Studio',
-            self::CommercialSpace => 'Local commercial',
-            self::Land => 'Terrain',
-            self::Office => 'Bureau',
-            self::Duplex => 'Duplex',
+            self::Apartment => __('front.property.types.apartment'),
+            self::House => __('front.property.types.house'),
+            self::Villa => __('front.property.types.villa'),
+            self::Studio => __('front.property.types.studio'),
+            self::CommercialSpace => __('front.property.types.commercial_space'),
+            self::Land => __('front.property.types.land'),
+            self::Office => __('front.property.types.office'),
+            self::Duplex => __('front.property.types.duplex'),
         };
     }
 }

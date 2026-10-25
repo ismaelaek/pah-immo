@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import BlogPostCard from '@/components/BlogPostCard.vue';
 import type { BlogPost } from '@/components/BlogPostCard.vue';
+import { useLocale } from '@/composables/useLocale';
 
 defineOptions({
     layout: {
@@ -13,17 +14,16 @@ defineProps<{
     posts: BlogPost[];
 }>();
 
-const description =
-    'Conseils PAH Immo pour vendre, acheter ou louer : lectures de marché, checklists et coulisses d’agence, à lire avant chaque décision immobilière importante.';
+const { t } = useLocale();
 </script>
 
 <template>
     <div>
-        <Head title="Blog">
+        <Head :title="t('blog.title')">
             <meta
                 head-key="description"
                 name="description"
-                :content="description"
+                :content="t('blog.description')"
             />
         </Head>
 
@@ -36,7 +36,7 @@ const description =
                     />
                     <img
                         src="/assets/images/hero-blog.jpg"
-                        alt="Signature d'un contrat immobilier accompagnée par PAH Immo"
+                        :alt="t('blog.hero_alt')"
                         class="absolute inset-0 size-full object-cover"
                     />
                 </picture>
@@ -50,12 +50,12 @@ const description =
                         <h1
                             class="text-4xl leading-[1.05] font-semibold tracking-tight text-white text-shadow-lg sm:text-5xl lg:text-6xl"
                         >
-                            Conseils, tendances et coulisses de l’immobilier.
+                            {{ t('blog.hero_title') }}
                         </h1>
                         <p
                             class="mx-auto mt-5 max-w-xl text-sm leading-6 text-white/80 sm:text-base sm:leading-7"
                         >
-                            {{ description }}
+                            {{ t('blog.description') }}
                         </p>
                     </div>
                 </div>
@@ -68,7 +68,7 @@ const description =
                     <h2
                         class="text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
                     >
-                        Les derniers articles
+                        {{ t('blog.latest') }}
                     </h2>
                 </div>
 
@@ -83,7 +83,7 @@ const description =
                     />
                 </div>
                 <p v-else class="text-sm leading-6 text-neutral-500">
-                    Aucun article pour le moment.
+                    {{ t('blog.empty') }}
                 </p>
             </div>
         </section>

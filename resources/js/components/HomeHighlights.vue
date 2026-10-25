@@ -3,45 +3,54 @@ import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { useLocale } from '@/composables/useLocale';
 
-const { localized } = useLocale();
+const { localized, t, trans } = useLocale();
 
-const slides = [
+const slideSources = [
     {
         webp: '/assets/images/highlights-1.webp',
         jpg: '/assets/images/highlights-1.jpg',
-        alt: 'Villa contemporaine avec piscine proposée à la vente par PAH Immo',
     },
     {
         webp: '/assets/images/living-room.webp',
         jpg: '/assets/images/living-room.jpg',
-        alt: 'Salon lumineux d’un bien immobilier à vendre ou à louer',
     },
     {
         webp: '/assets/images/kitchen.webp',
         jpg: '/assets/images/kitchen.jpg',
-        alt: 'Cuisine moderne d’une maison accompagnée par PAH Immo',
     },
     {
         webp: '/assets/images/bedroom.webp',
         jpg: '/assets/images/bedroom.jpg',
-        alt: 'Chambre contemporaine dans un bien sélectionné par PAH Immo',
     },
 ] as const;
 
+const slides = computed(() => {
+    const alts = trans<string[]>('highlights.slides') ?? [];
+
+    return slideSources.map((slide, index) => ({
+        ...slide,
+        alt: alts[index] ?? '',
+    }));
+});
+
 const currentSlide = ref(0);
-const activeSlide = computed(() => slides[currentSlide.value] ?? slides[0]);
+const activeSlide = computed(() => slides.value[currentSlide.value] ?? slides.value[0]);
 
 function goToSlide(index: number): void {
-    const total = slides.length;
+    const total = slides.value.length;
     currentSlide.value = ((index % total) + total) % total;
 }
 
-const stats = [
-    { value: '100%', label: 'Suivi personnalisé' },
-    { value: '3', label: 'Services : vente, achat, location' },
-    { value: '4', label: 'Villes d’intervention' },
-    { value: '5★', label: 'Satisfaction client' },
-] as const;
+const stats = computed(() => {
+    const labels = trans<string[]>('highlights.stats') ?? [];
+
+    return [
+        { value: '100%', label: labels[0] ?? '' },
+        { value: '3', label: labels[1] ?? '' },
+        { value: '4', label: labels[2] ?? '' },
+        { value: '5★', label: labels[3] ?? '' },
+    ];
+});
 </script>
 
 <template>
@@ -50,7 +59,7 @@ const stats = [
             <h2
                 class="mb-10 max-w-lg text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:mb-14"
             >
-                Prêt à changer de bien&nbsp;?
+                {{ t('highlights.title') }}
             </h2>
 
             <div
@@ -87,7 +96,7 @@ const stats = [
                                         ? 'bg-brand-red'
                                         : 'bg-neutral-300'
                                 "
-                                :aria-label="`Voir la photo ${index + 1}`"
+                                :aria-label="t('highlights.slide', { number: index + 1 })"
                                 @click="goToSlide(index)"
                             />
                         </div>
@@ -96,7 +105,7 @@ const stats = [
                             <button
                                 type="button"
                                 class="flex size-11 items-center justify-center rounded-full bg-white text-neutral-900 shadow-md transition-colors hover:bg-neutral-50"
-                                aria-label="Photo précédente"
+                                :aria-label="t('highlights.prev')"
                                 @click="goToSlide(currentSlide - 1)"
                             >
                                 <svg
@@ -116,7 +125,7 @@ const stats = [
                             <button
                                 type="button"
                                 class="flex size-11 items-center justify-center rounded-full bg-white text-neutral-900 shadow-md transition-colors hover:bg-neutral-50"
-                                aria-label="Photo suivante"
+                                :aria-label="t('highlights.next')"
                                 @click="goToSlide(currentSlide + 1)"
                             >
                                 <svg
@@ -143,24 +152,20 @@ const stats = [
                     <h3
                         class="text-3xl leading-tight font-semibold tracking-tight text-neutral-950"
                     >
-                        Un bon bien, même compact, change tout.
+                        {{ t('highlights.subtitle') }}
                     </h3>
                     <p class="text-sm leading-6 text-neutral-500">
-                        PAH Immo, agence immobilière, vous accompagne pour
-                        vendre votre maison au juste prix, acheter un
-                        appartement ou une villa, et trouver une location
-                        adaptée à votre projet.
+                        {{ t('highlights.body') }}
                     </p>
                     <Link
                         :href="localized('/about')"
                         prefetch
                         class="inline-flex w-fit cursor-pointer rounded-full border border-neutral-200 px-6 py-2.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
                     >
-                        En savoir plus
+                        {{ t('highlights.more') }}
                     </Link>
                     <p class="text-sm leading-6 text-neutral-500">
-                        Nos conseillers sélectionnent des biens à vendre ou à
-                        louer et restent à vos côtés jusqu’à la signature.
+                        {{ t('highlights.aside') }}
                     </p>
                 </div>
 
@@ -173,7 +178,7 @@ const stats = [
                             />
                             <img
                                 src="/assets/images/highlights-2.jpg"
-                                alt="Villa blanche avec piscine à vendre accompagnée par PAH Immo"
+                                :alt="t('highlights.side_alt')"
                                 class="aspect-[4/3] w-full object-cover"
                             />
                         </picture>
@@ -181,14 +186,14 @@ const stats = [
                     <p
                         class="text-center text-lg font-medium tracking-tight text-brand-red"
                     >
-                        À partir de 250 000&nbsp;€
+                        {{ t('highlights.from_price') }}
                     </p>
                     <Link
                         :href="localized('/properties')"
                         prefetch
                         class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >
-                        Voir les biens
+                        {{ t('highlights.see_properties') }}
                         <span aria-hidden="true">→</span>
                     </Link>
                 </div>
