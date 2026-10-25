@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 </script>
 
 <template>
@@ -33,7 +36,7 @@ import { Link } from '@inertiajs/vue3';
                         chaque mètre carré compte vraiment.
                     </p>
                     <Link
-                        href="/properties"
+                        :href="localized('/properties')"
                         prefetch
                         class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >

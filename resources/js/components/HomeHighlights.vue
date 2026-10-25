@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 
 const slides = [
     {
@@ -149,7 +152,7 @@ const stats = [
                         adaptée à votre projet.
                     </p>
                     <Link
-                        href="/about"
+                        :href="localized('/about')"
                         prefetch
                         class="inline-flex w-fit cursor-pointer rounded-full border border-neutral-200 px-6 py-2.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
                     >
@@ -181,7 +184,7 @@ const stats = [
                         À partir de 250 000&nbsp;€
                     </p>
                     <Link
-                        href="/properties"
+                        :href="localized('/properties')"
                         prefetch
                         class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >

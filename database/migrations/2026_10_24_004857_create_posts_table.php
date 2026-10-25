@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->longText('body');
             $table->boolean('enabled')->default(true);
+            $table->unsignedInteger('views')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

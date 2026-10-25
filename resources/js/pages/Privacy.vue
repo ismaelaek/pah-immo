@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import LegalPage from '@/components/LegalPage.vue';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 </script>
 
 <template>
@@ -38,7 +41,7 @@ import LegalPage from '@/components/LegalPage.vue';
             <p>
                 Pour toute question relative à vos données ou pour exercer vos
                 droits, utilisez la page
-                <Link href="/contact" prefetch>Contact</Link>.
+                <Link :href="localized('/contact')" prefetch>Contact</Link>.
             </p>
         </section>
 
@@ -214,7 +217,7 @@ import LegalPage from '@/components/LegalPage.vue';
             </ul>
             <p>
                 Pour exercer ces droits, contactez-nous via la page
-                <Link href="/contact" prefetch>Contact</Link>. Vous pouvez
+                <Link :href="localized('/contact')" prefetch>Contact</Link>. Vous pouvez
                 également introduire une réclamation auprès de la CNIL
                 (<a href="https://www.cnil.fr" rel="noopener noreferrer"
                     >www.cnil.fr</a
@@ -273,11 +276,13 @@ import LegalPage from '@/components/LegalPage.vue';
             <p>
                 Pour toute question sur cette politique ou pour exercer vos
                 droits, rendez-vous sur la page
-                <Link href="/contact" prefetch>Contact</Link>.
+                <Link :href="localized('/contact')" prefetch>Contact</Link>.
             </p>
             <p>
                 Voir aussi les
-                <Link href="/mentions-legales" prefetch>mentions légales</Link>.
+                <Link :href="localized('/mentions-legales')" prefetch
+                    >mentions légales</Link
+                >.
             </p>
         </section>
     </LegalPage>

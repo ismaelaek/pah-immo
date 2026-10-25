@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 
 export type BlogPost = {
     slug: string;
@@ -12,6 +15,7 @@ export type BlogPost = {
     publishedAtFormatted: string | null;
     image: string | null;
     imageAlt: string;
+    views: number;
 };
 
 withDefaults(
@@ -130,7 +134,7 @@ function authorInitials(name: string): string {
                 </div>
 
                 <Link
-                    :href="`/blog/${post.slug}`"
+                    :href="localized(`/blog/${post.slug}`)"
                     prefetch
                     class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >

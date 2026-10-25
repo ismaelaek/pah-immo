@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Message;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -27,6 +28,11 @@ class DatabaseSeeder extends Seeder
         Post::factory()
             ->recycle($users)
             ->count(6)
+            ->create();
+
+        // Messages
+        Message::factory()
+            ->count(10)
             ->create();
     }
 }

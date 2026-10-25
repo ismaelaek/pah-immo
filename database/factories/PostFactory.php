@@ -29,6 +29,7 @@ class PostFactory extends Factory
             'description' => Str::limit(fake()->paragraph(), 156),
             'body' => fake()->paragraphs(4, true),
             'enabled' => true,
+            'views' => 0,
         ];
     }
 

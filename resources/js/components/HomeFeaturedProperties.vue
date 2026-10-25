@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 
 const deliveryStageLabels = {
     'off-plan': 'Sur plan',
@@ -115,7 +118,7 @@ const properties = [
                 </div>
 
                 <Link
-                    href="/properties"
+                    :href="localized('/properties')"
                     prefetch
                     class="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
@@ -131,7 +134,7 @@ const properties = [
                     class="flex flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.06)]"
                 >
                     <Link
-                        href="/properties"
+                        :href="localized('/properties')"
                         prefetch
                         class="group relative block overflow-hidden"
                     >
@@ -348,7 +351,7 @@ const properties = [
                                 {{ property.price }}
                             </p>
                             <Link
-                                href="/properties"
+                                :href="localized('/properties')"
                                 prefetch
                                 class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                             >

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import { useLocale } from '@/composables/useLocale';
 
 const props = withDefaults(
     defineProps<{
@@ -11,11 +13,10 @@ const props = withDefaults(
     },
 );
 
-const page = usePage();
 const menuOpen = ref(false);
-const currentUrl = computed(() => page.url.split('?')[0] ?? '/');
+const { localized, path } = useLocale();
 const overlay = computed(
-    () => props.overlay || ['/', '/contact'].includes(currentUrl.value),
+    () => props.overlay || ['/', '/contact'].includes(path.value),
 );
 
 const links = [
@@ -27,10 +28,10 @@ const links = [
 
 function isActive(href: string): boolean {
     if (href === '/') {
-        return currentUrl.value === '/';
+        return path.value === '/';
     }
 
-    return currentUrl.value.startsWith(href);
+    return path.value.startsWith(href);
 }
 </script>
 
@@ -42,7 +43,7 @@ function isActive(href: string): boolean {
         <div
             class="relative z-50 mx-auto flex max-w-[92rem] items-center justify-between gap-4 px-5 py-5 lg:px-10"
         >
-            <Link href="/" class="relative z-10 shrink-0" prefetch>
+            <Link :href="localized('/')" class="relative z-10 shrink-0" prefetch>
                 <img
                     src="/assets/logo.png"
                     alt="PAH Immo"
@@ -62,7 +63,7 @@ function isActive(href: string): boolean {
                 <Link
                     v-for="link in links"
                     :key="link.href"
-                    :href="link.href"
+                    :href="localized(link.href)"
                     prefetch
                     class="cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
                     :class="
@@ -76,8 +77,10 @@ function isActive(href: string): boolean {
             </nav>
 
             <div class="flex items-center gap-3">
+                <LanguageSwitcher :overlay="overlay && !menuOpen" />
+
                 <Link
-                    href="/contact"
+                    :href="localized('/contact')"
                     prefetch
                     class="cursor-pointer rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
@@ -134,7 +137,7 @@ function isActive(href: string): boolean {
                     <Link
                         v-for="link in links"
                         :key="link.href"
-                        :href="link.href"
+                        :href="localized(link.href)"
                         class="cursor-pointer rounded-full px-5 py-3.5 text-base font-medium text-neutral-900 transition-colors"
                         :class="
                             isActive(link.href)

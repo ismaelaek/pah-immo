@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Enums\Locale;
+use App\Models\Message;
 use App\Models\Post;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -11,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -39,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
     protected function configureDefaults(): void
     {
         Date::use(CarbonImmutable::class);
+        URL::defaults(['locale' => Locale::default()->value]);
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
@@ -66,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'user' => User::class,
             'post' => Post::class,
+            'message' => Message::class,
         ]);
     }
 }

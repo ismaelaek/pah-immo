@@ -7,12 +7,13 @@ namespace App\Http\Controllers;
 use App\Enums\MediaConversion;
 use App\Http\Resources\BlogPostResource;
 use App\Models\Post;
+use Illuminate\Http\Response;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class BlogController extends Controller
 {
-    public function index(): Response
+    public function index(): InertiaResponse
     {
         $posts = Post::query()
             ->enabled()
@@ -28,7 +29,7 @@ class BlogController extends Controller
         ]);
     }
 
-    public function show(string $slug): Response
+    public function show(string $locale, string $slug): InertiaResponse
     {
         $post = Post::query()
             ->enabled()
@@ -41,5 +42,17 @@ class BlogController extends Controller
                 ? null
                 : (new BlogPostResource($post, MediaConversion::Large))->resolve(),
         ]);
+    }
+
+    public function recordView(string $locale, string $slug): Response
+    {
+        Post::withoutTimestamps(function () use ($slug): void {
+            Post::query()
+                ->enabled()
+                ->where('slug', $slug)
+                ->increment('views');
+        });
+
+        return response()->noContent();
     }
 }

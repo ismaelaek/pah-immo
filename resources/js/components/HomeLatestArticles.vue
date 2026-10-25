@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import BlogPostCard from '@/components/BlogPostCard.vue';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 import type { BlogPost } from '@/components/BlogPostCard.vue';
 
 defineProps<{
@@ -27,7 +30,7 @@ defineProps<{
                 </div>
 
                 <Link
-                    href="/blog"
+                    :href="localized('/blog')"
                     prefetch
                     class="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >

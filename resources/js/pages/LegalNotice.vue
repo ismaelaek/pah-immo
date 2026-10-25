@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import LegalPage from '@/components/LegalPage.vue';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 </script>
 
 <template>
@@ -37,7 +40,7 @@ import LegalPage from '@/components/LegalPage.vue';
                 informations d’identification de l’éditeur (forme juridique,
                 siège, immatriculation) sont communiquées sur demande via la
                 page
-                <Link href="/contact" prefetch>Contact</Link>.
+                <Link :href="localized('/contact')" prefetch>Contact</Link>.
             </p>
             <p>
                 Directeur de la publication : le représentant légal de PAH
@@ -143,7 +146,7 @@ import LegalPage from '@/components/LegalPage.vue';
                 servent à traiter votre projet : visite, estimation, vente,
                 achat ou location. Le traitement de vos données est décrit dans
                 la
-                <Link href="/confidentialite" prefetch
+                <Link :href="localized('/confidentialite')" prefetch
                     >politique de confidentialité</Link
                 >.
             </p>
@@ -276,7 +279,7 @@ import LegalPage from '@/components/LegalPage.vue';
             <h2>17. Données personnelles</h2>
             <p>
                 Le traitement des données personnelles est décrit dans la
-                <Link href="/confidentialite" prefetch
+                <Link :href="localized('/confidentialite')" prefetch
                     >politique de confidentialité</Link
                 >.
             </p>
@@ -305,7 +308,7 @@ import LegalPage from '@/components/LegalPage.vue';
             <h2>20. Contact</h2>
             <p>
                 Pour toute question sur ces mentions, écrivez-nous via la page
-                <Link href="/contact" prefetch>Contact</Link>.
+                <Link :href="localized('/contact')" prefetch>Contact</Link>.
             </p>
         </section>
     </LegalPage>

@@ -41,6 +41,10 @@ class PostsTable
                     ->label(__('Published'))
                     ->boolean()
                     ->sortable(),
+                TextColumn::make('views')
+                    ->label(__('Views'))
+                    ->sortable()
+                    ->numeric(),
                 TextColumn::make('created_at')
                     ->dateTime(config('app.datetime_format')),
             ])

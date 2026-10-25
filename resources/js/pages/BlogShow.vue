@@ -1,10 +1,57 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useHttp } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
 import type { BlogPost } from '@/components/BlogPostCard.vue';
+import { useLocale } from '@/composables/useLocale';
 
-defineProps<{
+const { locale, localized } = useLocale();
+const http = useHttp();
+
+const copy = computed(() => {
+    const catalog = {
+        fr: {
+            missing: 'Article introuvable',
+            back: 'Retour au journal',
+            views: (count: number) => (count === 1 ? 'vue' : 'vues'),
+        },
+        en: {
+            missing: 'Article not found',
+            back: 'Back to the journal',
+            views: (count: number) => (count === 1 ? 'view' : 'views'),
+        },
+        it: {
+            missing: 'Articolo non trovato',
+            back: 'Torna al journal',
+            views: (count: number) =>
+                count === 1 ? 'visualizzazione' : 'visualizzazioni',
+        },
+        es: {
+            missing: 'Artículo no encontrado',
+            back: 'Volver al diario',
+            views: (count: number) => (count === 1 ? 'vista' : 'vistas'),
+        },
+    } as const;
+
+    return catalog[locale.value as keyof typeof catalog] ?? catalog.fr;
+});
+
+const props = defineProps<{
     post: BlogPost | null;
 }>();
+
+const views = ref(props.post?.views ?? 0);
+
+onMounted(() => {
+    if (props.post === null) {
+        return;
+    }
+
+    http.post(localized(`/blog/${props.post.slug}/view`), {
+        onSuccess: () => {
+            views.value += 1;
+        },
+    });
+});
 
 function authorInitials(name: string): string {
     return name
@@ -26,18 +73,18 @@ function authorInitials(name: string): string {
                 :content="post.description"
             />
         </Head>
-        <Head v-else title="Article introuvable" />
+        <Head v-else :title="copy.missing" />
 
         <article
             v-if="post"
             class="mx-auto max-w-3xl px-5 py-8 sm:px-8 lg:px-12 lg:py-16"
         >
             <Link
-                href="/blog"
+                :href="localized('/blog')"
                 prefetch
                 class="text-sm font-medium text-brand-red transition-opacity hover:opacity-80"
             >
-                ← Retour au journal
+                ← {{ copy.back }}
             </Link>
 
             <h1
@@ -68,6 +115,8 @@ function authorInitials(name: string): string {
                             {{ post.publishedAtFormatted }}
                         </time>
                     </template>
+                    <span class="text-neutral-300">·</span>
+                    {{ views }} {{ copy.views(views) }}
                 </p>
             </div>
 
@@ -86,14 +135,14 @@ function authorInitials(name: string): string {
 
         <div v-else class="mx-auto max-w-3xl px-5 py-24 text-center sm:px-8">
             <h1 class="text-3xl font-semibold tracking-tight text-neutral-950">
-                Article introuvable
+                {{ copy.missing }}
             </h1>
             <Link
-                href="/blog"
+                :href="localized('/blog')"
                 prefetch
                 class="mt-6 inline-flex rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
-                Retour au journal
+                {{ copy.back }}
             </Link>
         </div>
     </div>

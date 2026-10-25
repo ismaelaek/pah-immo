@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { useLocale } from '@/composables/useLocale';
+
+const { localized } = useLocale();
 
 const year = new Date().getFullYear();
 
@@ -29,7 +32,7 @@ const rightLinks = [
                     <Link
                         v-for="link in leftLinks"
                         :key="link.href"
-                        :href="link.href"
+                        :href="localized(link.href)"
                         prefetch
                         class="transition-colors hover:text-neutral-950"
                     >
@@ -38,7 +41,7 @@ const rightLinks = [
                 </nav>
 
                 <Link
-                    href="/"
+                    :href="localized('/')"
                     prefetch
                     class="lg:absolute lg:left-1/2 lg:-translate-x-1/2"
                 >
@@ -56,7 +59,7 @@ const rightLinks = [
                     <Link
                         v-for="link in rightLinks"
                         :key="link.href"
-                        :href="link.href"
+                        :href="localized(link.href)"
                         prefetch
                         class="transition-colors hover:text-neutral-950"
                     >
@@ -71,14 +74,14 @@ const rightLinks = [
                 <p>© {{ year }} PAH Immo. Tous droits réservés.</p>
                 <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
                     <Link
-                        href="/mentions-legales"
+                        :href="localized('/mentions-legales')"
                         prefetch
                         class="transition-colors hover:text-neutral-700"
                     >
                         Mentions légales
                     </Link>
                     <Link
-                        href="/confidentialite"
+                        :href="localized('/confidentialite')"
                         prefetch
                         class="transition-colors hover:text-neutral-700"
                     >

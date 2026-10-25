@@ -16,7 +16,7 @@ class ContactInquiry extends Mailable
         public string $lastName,
         public string $email,
         public string $phone,
-        public string $message,
+        public string $body,
     ) {}
 
     public function envelope(): Envelope

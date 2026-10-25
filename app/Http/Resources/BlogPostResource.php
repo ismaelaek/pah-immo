@@ -35,7 +35,8 @@ class BlogPostResource extends JsonResource
      *     publishedAt: string|null,
      *     publishedAtFormatted: string|null,
      *     image: string|null,
-     *     imageAlt: string
+     *     imageAlt: string,
+     *     views: int
      * }
      */
     public function toArray(Request $request): array
@@ -53,6 +54,7 @@ class BlogPostResource extends JsonResource
             'publishedAtFormatted' => $this->created_at?->format(config('app.datetime_format')),
             'image' => $this->mediaUrl($image, $this->imageConversion),
             'imageAlt' => $this->title,
+            'views' => $this->views,
         ];
     }
 

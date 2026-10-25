@@ -105,7 +105,7 @@ function searchProperties(): void {
                         </h2>
 
                         <div
-                            class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+                            class="grid items-end gap-4 sm:grid-cols-2 xl:grid-cols-[repeat(4,minmax(0,1fr))_auto]"
                         >
                             <label class="relative flex flex-col gap-2">
                                 <span
@@ -244,12 +244,10 @@ function searchProperties(): void {
                                     />
                                 </svg>
                             </label>
-                        </div>
 
-                        <div class="flex justify-end">
                             <button
                                 type="submit"
-                                class="cursor-pointer rounded-full bg-brand-red px-7 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                                class="h-12 cursor-pointer justify-self-end rounded-full bg-brand-red px-7 text-sm font-semibold whitespace-nowrap text-white transition-opacity hover:opacity-90"
                             >
                                 Rechercher
                             </button>

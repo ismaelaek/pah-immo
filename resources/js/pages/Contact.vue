@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import ContactInfo from '@/components/ContactInfo.vue';
+import { useLocale } from '@/composables/useLocale';
 
 defineOptions({
     layout: {
@@ -9,6 +11,8 @@ defineOptions({
 });
 
 const page = usePage();
+const { localized } = useLocale();
+const sent = computed(() => Boolean(page.flash.success));
 const form = useForm({
     first_name: '',
     last_name: '',
@@ -18,7 +22,7 @@ const form = useForm({
 });
 
 function submit(): void {
-    form.post('/contact', {
+    form.post(localized('/contact'), {
         onSuccess: () => form.reset(),
     });
 }
@@ -69,23 +73,46 @@ const inputClass =
                         </h1>
                     </div>
 
-                    <form
+                    <div
                         class="rounded-[1.75rem] bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] sm:p-7 lg:rounded-[2rem] lg:p-8"
-                        @submit.prevent="submit"
                     >
                         <h2
-                            class="mb-6 text-2xl font-semibold tracking-tight text-neutral-950 lg:text-3xl"
+                            class="text-2xl font-semibold tracking-tight text-neutral-950 lg:text-3xl"
+                            :class="sent ? 'mb-8' : 'mb-6'"
                         >
                             Écrivez-nous
                         </h2>
 
-                        <p
-                            v-if="page.flash.success"
-                            class="mb-6 rounded-full bg-brand-red/10 px-5 py-3 text-sm font-medium text-brand-red"
+                        <div
+                            v-if="sent"
+                            class="flex flex-col items-center gap-4 py-8 text-center sm:py-10"
                         >
-                            {{ page.flash.success }}
-                        </p>
+                            <span
+                                class="flex size-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600"
+                                aria-hidden="true"
+                            >
+                                <svg
+                                    class="size-8"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        d="M5 13l4 4L19 7"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </span>
+                            <p
+                                class="max-w-md text-sm font-medium leading-6 text-emerald-700 sm:text-base"
+                            >
+                                {{ page.flash.success }}
+                            </p>
+                        </div>
 
+                        <form v-else @submit.prevent="submit">
                         <div class="mb-6 grid gap-4 sm:grid-cols-2">
                             <label class="flex flex-col gap-2">
                                 <span
@@ -199,7 +226,8 @@ const inputClass =
                                 {{ form.processing ? 'Envoi…' : 'Envoyer' }}
                             </button>
                         </div>
-                    </form>
+                        </form>
+                    </div>
                     </div>
                 </div>
             </div>
