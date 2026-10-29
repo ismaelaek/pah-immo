@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Message;
 use App\Models\Post;
+use App\Models\Property;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -28,6 +29,11 @@ class DatabaseSeeder extends Seeder
         Post::factory()
             ->recycle($users)
             ->count(6)
+            ->create();
+
+        Property::factory()
+            ->withImages()
+            ->count(9)
             ->create();
 
         // Messages
