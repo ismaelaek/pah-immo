@@ -67,6 +67,8 @@ class PropertiesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
+            ->paginated([12, 24, 48, 96])
+            ->defaultPaginationPageOption(12)
             ->filters([
                 SelectFilter::make('offer_type')
                     ->label(__('Offer type'))

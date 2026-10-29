@@ -6,6 +6,7 @@ use App\Enums\Locale;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,7 +18,9 @@ Route::prefix('{locale}')
     ->group(function (): void {
         Route::get('/', HomeController::class)->name('home');
         Route::inertia('/about', 'About')->name('about');
-        Route::inertia('/properties', 'Properties')->name('properties');
+        Route::get('/properties', [PropertyController::class, 'index'])->name('properties');
+        Route::get('/properties/map', [PropertyController::class, 'map'])->name('properties.map');
+        Route::get('/properties/{slug}', [PropertyController::class, 'show'])->name('properties.show');
         Route::get('/blog', [BlogController::class, 'index'])->name('blog');
         Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
         Route::post('/blog/{slug}/view', [BlogController::class, 'recordView'])

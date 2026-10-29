@@ -33,7 +33,7 @@ const { localized, t } = useLocale();
                         {{ t('best_value.body') }}
                     </p>
                     <Link
-                        :href="localized('/properties')"
+                        :href="localized('/properties/map')"
                         prefetch
                         class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-brand-red px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >

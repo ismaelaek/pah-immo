@@ -119,8 +119,9 @@ class PropertyForm
                                 TextInput::make('price')
                                     ->label(__('Price'))
                                     ->required()
-                                    ->integer()
+                                    ->numeric()
                                     ->minValue(0)
+                                    ->step(0.01)
                                     ->suffix('€'),
                                 TextInput::make('area')
                                     ->label(__('Area'))

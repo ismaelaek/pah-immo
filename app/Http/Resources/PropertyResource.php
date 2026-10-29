@@ -34,7 +34,7 @@ class PropertyResource extends JsonResource
      *     body: string|null,
      *     type: array{value: string, label: string},
      *     offerType: array{value: string, label: string},
-     *     price: int,
+     *     price: float,
      *     area: int,
      *     bedrooms: int|null,
      *     bathrooms: int|null,

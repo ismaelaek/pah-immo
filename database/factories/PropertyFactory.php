@@ -34,8 +34,8 @@ class PropertyFactory extends Factory
             'type' => fake()->randomElement(PropertyType::cases()),
             'offer_type' => $offerType,
             'price' => $offerType === OfferType::Rent
-                ? fake()->numberBetween(500, 5000)
-                : fake()->numberBetween(80_000, 1_500_000),
+                ? $this->rentPrice()
+                : $this->salePrice(),
             'area' => fake()->numberBetween(20, 400),
             'bedrooms' => fake()->numberBetween(1, 6),
             'bathrooms' => fake()->numberBetween(1, 4),
@@ -51,7 +51,7 @@ class PropertyFactory extends Factory
     {
         return $this->state(fn (): array => [
             'offer_type' => OfferType::Sale,
-            'price' => fake()->numberBetween(80_000, 1_500_000),
+            'price' => $this->salePrice(),
         ]);
     }
 
@@ -59,7 +59,7 @@ class PropertyFactory extends Factory
     {
         return $this->state(fn (): array => [
             'offer_type' => OfferType::Rent,
-            'price' => fake()->numberBetween(500, 5000),
+            'price' => $this->rentPrice(),
         ]);
     }
 
@@ -74,5 +74,21 @@ class PropertyFactory extends Factory
                     ->toMediaCollection(MediaCollection::Images->value);
             }
         });
+    }
+
+    /**
+     * A sale price in euros, rounded to the thousand.
+     */
+    private function salePrice(): int
+    {
+        return fake()->numberBetween(80, 1_500) * 1_000;
+    }
+
+    /**
+     * A monthly rent in euros, rounded to ten.
+     */
+    private function rentPrice(): int
+    {
+        return fake()->numberBetween(50, 500) * 10;
     }
 }
