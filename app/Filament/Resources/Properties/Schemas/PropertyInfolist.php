@@ -35,6 +35,22 @@ class PropertyInfolist
                                     ->label(__('Content'))
                                     ->markdown(),
                             ]),
+                        Section::make(__('Location'))
+                            ->icon(Heroicon::OutlinedMapPin)
+                            ->columns(2)
+                            ->schema([
+                                TextEntry::make('city')
+                                    ->label(__('City')),
+                                TextEntry::make('neighborhood')
+                                    ->label(__('Neighborhood'))
+                                    ->placeholder('-'),
+                                TextEntry::make('latitude')
+                                    ->label(__('Latitude'))
+                                    ->placeholder('-'),
+                                TextEntry::make('longitude')
+                                    ->label(__('Longitude'))
+                                    ->placeholder('-'),
+                            ]),
                         Section::make(__('Media'))
                             ->icon(Heroicon::OutlinedPhoto)
                             ->schema([
@@ -84,22 +100,6 @@ class PropertyInfolist
                                     ->placeholder('-'),
                                 TextEntry::make('bathrooms')
                                     ->label(__('Bathrooms'))
-                                    ->placeholder('-'),
-                            ]),
-                        Section::make(__('Location'))
-                            ->icon(Heroicon::OutlinedMapPin)
-                            ->columns(2)
-                            ->schema([
-                                TextEntry::make('city')
-                                    ->label(__('City')),
-                                TextEntry::make('neighborhood')
-                                    ->label(__('Neighborhood'))
-                                    ->placeholder('-'),
-                                TextEntry::make('latitude')
-                                    ->label(__('Latitude'))
-                                    ->placeholder('-'),
-                                TextEntry::make('longitude')
-                                    ->label(__('Longitude'))
                                     ->placeholder('-'),
                             ]),
                         Section::make(__('History'))

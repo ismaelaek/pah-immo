@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Properties;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Resources\Properties\Pages\CreateProperty;
 use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\Pages\ListProperties;
@@ -19,12 +20,15 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class PropertyResource extends Resource
 {
     protected static ?string $model = Property::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHomeModern;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::RealEstate;
 
     protected static ?string $recordTitleAttribute = 'title';
 

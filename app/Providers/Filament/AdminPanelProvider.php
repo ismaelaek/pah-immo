@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Pages\Auth\EditProfile;
 use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\Authenticate;
@@ -41,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Red,
             ])
+            ->navigationGroups(NavigationGroup::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

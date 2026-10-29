@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Messages;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Resources\Messages\Pages\ListMessages;
 use App\Filament\Resources\Messages\Pages\ViewMessage;
 use App\Filament\Resources\Messages\Schemas\MessageInfolist;
@@ -15,12 +16,15 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use UnitEnum;
 
 class MessageResource extends Resource
 {
     protected static ?string $model = Message::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Communication;
 
     protected static ?string $recordTitleAttribute = 'full_name';
 
