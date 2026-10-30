@@ -8,7 +8,10 @@ import PropertyMap from '@/components/PropertyMap.vue';
 import type { MapBounds } from '@/components/PropertyMap.vue';
 import PropertySearchBar from '@/components/PropertySearchBar.vue';
 import { useLocale } from '@/composables/useLocale';
-import { filledPropertyFilters } from '@/composables/usePropertySearchFields';
+import {
+    filledPropertyFilters,
+    propertySearchQuery,
+} from '@/composables/usePropertySearchFields';
 import type { PropertyFilters } from '@/composables/usePropertySearchFields';
 
 defineOptions({
@@ -45,6 +48,12 @@ const pendingBounds = ref<MapBounds | null>(null);
 let searchTimer: ReturnType<typeof setTimeout> | undefined;
 
 const activeSlug = computed(() => hoveredSlug.value ?? selectedSlug.value);
+
+const listUrl = computed(() => {
+    const query = new URLSearchParams(filledPropertyFilters(props.filters));
+
+    return localized(`/properties${query.size > 0 ? `?${query}` : ''}`);
+});
 
 function serializeBounds(bounds: MapBounds): string {
     return [bounds.south, bounds.west, bounds.north, bounds.east]
@@ -101,7 +110,7 @@ function searchFilters(filters: PropertyFilters): void {
     pendingBounds.value = null;
     selectedSlug.value = null;
 
-    visit(filledPropertyFilters(filters), { fitResults: true });
+    visit(propertySearchQuery(filters), { fitResults: true });
 }
 
 function onMapMoved(bounds: MapBounds): void {
@@ -170,11 +179,21 @@ onBeforeUnmount(() => clearTimeout(searchTimer));
                 class="order-last px-5 py-8 sm:px-8 lg:order-first lg:col-span-2 lg:overflow-y-auto lg:px-10 lg:py-10"
                 :aria-busy="loading"
             >
-                <h1
-                    class="text-3xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-4xl"
-                >
-                    {{ t('properties.map_title') }}
-                </h1>
+                <div class="flex items-center justify-between gap-4">
+                    <h1
+                        class="text-xl leading-tight font-semibold tracking-tight text-neutral-950 sm:text-2xl"
+                    >
+                        {{ t('properties.map_title') }}
+                    </h1>
+                    <Link
+                        :href="listUrl"
+                        prefetch
+                        class="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-900 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
+                    >
+                        <span aria-hidden="true">←</span>
+                        {{ t('properties.back') }}
+                    </Link>
+                </div>
                 <p class="mt-3 h-6 text-sm leading-6 text-neutral-500">
                     <span
                         v-if="loading"
@@ -230,7 +249,9 @@ onBeforeUnmount(() => clearTimeout(searchTimer));
                 </p>
             </div>
 
-            <div class="h-[45svh] lg:col-span-3 lg:h-full">
+            <div
+                class="h-[45svh] px-3 pb-3 lg:col-span-3 lg:h-full lg:pr-4 lg:pb-4 lg:pl-0"
+            >
                 <PropertyMap
                     ref="propertyMap"
                     :properties="properties.data"

@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useLocale } from '@/composables/useLocale';
 import { usePropertyFormatting } from '@/composables/usePropertyFormatting';
+import { propertyVisit } from '@/composables/usePropertyVisit';
 
 export type PropertyOption = {
     value: string;
@@ -53,7 +54,8 @@ const href = computed(() => localized(`/properties/${props.property.slug}`));
     >
         <Link
             :href="href"
-            prefetch
+            :component="propertyVisit.component"
+            :page-props="propertyVisit.pageProps"
             class="group relative block overflow-hidden"
         >
             <img
@@ -186,7 +188,8 @@ const href = computed(() => localized(`/properties/${props.property.slug}`));
                 </p>
                 <Link
                     :href="href"
-                    prefetch
+                    :component="propertyVisit.component"
+                    :page-props="propertyVisit.pageProps"
                     class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-brand-red px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
                     {{ t('featured.see_property') }}

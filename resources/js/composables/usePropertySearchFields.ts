@@ -25,6 +25,18 @@ export function filledPropertyFilters(
     );
 }
 
+/**
+ * Query for a new search. The server keeps the last filters in the session,
+ * so an empty search must say so explicitly to clear them.
+ */
+export function propertySearchQuery(
+    filters: PropertyFilters,
+): Record<string, string> {
+    const query = filledPropertyFilters(filters);
+
+    return Object.keys(query).length > 0 ? query : { reset: '1' };
+}
+
 export function usePropertySearchFields(
     propertyTypes: Ref<PropertyOption[]>,
     cities: Ref<string[]>,

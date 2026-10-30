@@ -5,7 +5,7 @@ import type { PropertyOption } from '@/components/PropertyCard.vue';
 import { useLocale } from '@/composables/useLocale';
 import {
     emptyPropertyFilters,
-    filledPropertyFilters,
+    propertySearchQuery,
     usePropertySearchFields,
 } from '@/composables/usePropertySearchFields';
 import type { PropertyFilters } from '@/composables/usePropertySearchFields';
@@ -32,7 +32,7 @@ const { fields } = usePropertySearchFields(
 const form = reactive<PropertyFilters>({ ...props.filters });
 
 function searchProperties(): void {
-    router.get(localized('/properties'), filledPropertyFilters(form), {
+    router.get(localized('/properties'), propertySearchQuery(form), {
         preserveScroll: props.preserveScroll,
     });
 }

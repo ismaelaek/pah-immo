@@ -19,6 +19,10 @@ class PropertyController extends Controller
 {
     private const int MAP_RESULTS_PER_PAGE = 20;
 
+    private const string FILTERS_SESSION_KEY = 'property_filters';
+
+    private const array FILTER_KEYS = ['type', 'price', 'city', 'rooms'];
+
     public function index(Request $request): Response
     {
         $filters = $this->searchFilters($request);
@@ -98,15 +102,31 @@ class PropertyController extends Controller
     }
 
     /**
+     * Read the search filters from the request, or restore the ones saved in
+     * the session when the request carries none. `reset` clears them.
+     *
      * @return array{type: PropertyType|null, priceRange: PriceRange|null, rooms: RoomFilter|null, city: string}
      */
     private function searchFilters(Request $request): array
     {
+        if ($request->boolean('reset')) {
+            $request->session()->forget(self::FILTERS_SESSION_KEY);
+        } elseif ($request->hasAny(self::FILTER_KEYS)) {
+            $request->session()->put(self::FILTERS_SESSION_KEY, $request->only(self::FILTER_KEYS));
+        }
+
+        /** @var array<string, mixed> $values */
+        $values = $request->hasAny(self::FILTER_KEYS)
+            ? $request->only(self::FILTER_KEYS)
+            : $request->session()->get(self::FILTERS_SESSION_KEY, []);
+
+        $value = fn (string $key): string => is_string($values[$key] ?? null) ? trim($values[$key]) : '';
+
         return [
-            'type' => PropertyType::tryFrom($request->string('type')->toString()),
-            'priceRange' => PriceRange::tryFrom($request->string('price')->toString()),
-            'rooms' => RoomFilter::tryFrom($request->string('rooms')->toString()),
-            'city' => $request->string('city')->trim()->toString(),
+            'type' => PropertyType::tryFrom($value('type')),
+            'priceRange' => PriceRange::tryFrom($value('price')),
+            'rooms' => RoomFilter::tryFrom($value('rooms')),
+            'city' => $value('city'),
         ];
     }
 

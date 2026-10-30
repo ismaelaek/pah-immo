@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Properties\Schemas;
 
 use App\Enums\Equipment;
+use App\Enums\Locale;
 use App\Enums\MediaCollection;
 use App\Enums\MediaConversion;
 use App\Enums\OfferType;
@@ -19,10 +20,12 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
+use Livewire\Component;
 
 class PropertyForm
 {
@@ -42,12 +45,16 @@ class PropertyForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(function (string $operation, ?string $state, Set $set): void {
+                                    ->afterStateUpdated(function (string $operation, ?string $state, Get $get, Set $set, Component $livewire): void {
                                         if ($operation !== 'create') {
                                             return;
                                         }
 
-                                        $set('slug', Str::slug((string) $state));
+                                        $isDefaultLocale = data_get($livewire, 'activeLocale', Locale::default()->value) === Locale::default()->value;
+
+                                        if ($isDefaultLocale || blank($get('slug'))) {
+                                            $set('slug', Str::slug((string) $state));
+                                        }
                                     }),
                                 Textarea::make('description')
                                     ->label(__('Description'))

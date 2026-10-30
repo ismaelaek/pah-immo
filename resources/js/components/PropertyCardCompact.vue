@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import type { Property } from '@/components/PropertyCard.vue';
 import { useLocale } from '@/composables/useLocale';
 import { usePropertyFormatting } from '@/composables/usePropertyFormatting';
+import { propertyVisit } from '@/composables/usePropertyVisit';
 
 withDefaults(
     defineProps<{
@@ -90,7 +91,8 @@ const { formatPrice, formatAddress } = usePropertyFormatting();
                 </p>
                 <Link
                     :href="localized(`/properties/${property.slug}`)"
-                    prefetch
+                    :component="propertyVisit.component"
+                    :page-props="propertyVisit.pageProps"
                     class="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-red px-3.5 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
                     @click.stop
                 >

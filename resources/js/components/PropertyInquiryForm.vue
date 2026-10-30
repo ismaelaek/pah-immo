@@ -27,6 +27,33 @@ const form = useForm({
     message: defaultMessage.value,
 });
 
+const fields = [
+    {
+        name: 'first_name',
+        label: 'contact.first_name',
+        type: 'text',
+        autocomplete: 'given-name',
+    },
+    {
+        name: 'last_name',
+        label: 'contact.last_name',
+        type: 'text',
+        autocomplete: 'family-name',
+    },
+    {
+        name: 'email',
+        label: 'contact.email',
+        type: 'email',
+        autocomplete: 'email',
+    },
+    {
+        name: 'phone',
+        label: 'contact.phone',
+        type: 'tel',
+        autocomplete: 'tel',
+    },
+] as const;
+
 function submit(): void {
     form.post(localized('/contact'), {
         preserveScroll: true,
@@ -38,30 +65,22 @@ function submit(): void {
 }
 
 const inputClass =
-    'h-12 rounded-full bg-[#F3F3F3] px-5 text-sm text-neutral-900 outline-none focus:ring-2 focus:ring-neutral-200';
+    'h-12 w-full rounded-2xl border border-transparent bg-[#F3F3F3] px-5 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-300 focus:bg-white';
 </script>
 
 <template>
-    <div
-        class="rounded-[1.75rem] bg-white p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] sm:p-7"
-    >
-        <h2 class="text-xl font-semibold tracking-tight text-neutral-950">
-            {{ t('properties.contact_title') }}
-        </h2>
-        <p class="mt-3 text-sm leading-6 text-neutral-500">
-            {{ t('properties.contact_body', { reference }) }}
-        </p>
-
+    <div>
         <div
             v-if="sent"
-            class="mt-6 flex flex-col items-center gap-3 py-6 text-center"
+            class="flex flex-col items-center gap-4 px-4 py-12 text-center"
+            role="status"
         >
             <span
-                class="flex size-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600"
+                class="flex size-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600"
                 aria-hidden="true"
             >
                 <svg
-                    class="size-7"
+                    class="size-8"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -74,83 +93,42 @@ const inputClass =
                     />
                 </svg>
             </span>
-            <p class="text-sm font-medium leading-6 text-emerald-700">
+            <p
+                class="max-w-sm text-base leading-7 font-medium text-neutral-900"
+            >
                 {{ page.flash.success }}
             </p>
         </div>
 
-        <form v-else class="mt-6 flex flex-col gap-4" @submit.prevent="submit">
-            <label class="flex flex-col gap-2">
+        <form
+            v-else
+            class="grid gap-x-4 gap-y-5 sm:grid-cols-2"
+            @submit.prevent="submit"
+        >
+            <label
+                v-for="field in fields"
+                :key="field.name"
+                class="flex flex-col gap-2"
+            >
                 <span class="text-sm font-medium text-neutral-800">
-                    {{ t('contact.first_name') }}
+                    {{ t(field.label) }}
                 </span>
                 <input
-                    v-model="form.first_name"
-                    type="text"
-                    name="first_name"
-                    autocomplete="given-name"
+                    v-model="form[field.name]"
+                    :type="field.type"
+                    :name="field.name"
+                    :autocomplete="field.autocomplete"
                     :class="inputClass"
                 />
                 <span
-                    v-if="form.errors.first_name"
+                    v-if="form.errors[field.name]"
                     class="text-sm text-brand-red"
                 >
-                    {{ form.errors.first_name }}
+                    {{ form.errors[field.name] }}
                 </span>
             </label>
 
-            <label class="flex flex-col gap-2">
-                <span class="text-sm font-medium text-neutral-800">
-                    {{ t('contact.last_name') }}
-                </span>
-                <input
-                    v-model="form.last_name"
-                    type="text"
-                    name="last_name"
-                    autocomplete="family-name"
-                    :class="inputClass"
-                />
-                <span
-                    v-if="form.errors.last_name"
-                    class="text-sm text-brand-red"
-                >
-                    {{ form.errors.last_name }}
-                </span>
-            </label>
-
-            <label class="flex flex-col gap-2">
-                <span class="text-sm font-medium text-neutral-800">
-                    {{ t('contact.email') }}
-                </span>
-                <input
-                    v-model="form.email"
-                    type="email"
-                    name="email"
-                    autocomplete="email"
-                    :class="inputClass"
-                />
-                <span v-if="form.errors.email" class="text-sm text-brand-red">
-                    {{ form.errors.email }}
-                </span>
-            </label>
-
-            <label class="flex flex-col gap-2">
-                <span class="text-sm font-medium text-neutral-800">
-                    {{ t('contact.phone') }}
-                </span>
-                <input
-                    v-model="form.phone"
-                    type="tel"
-                    name="phone"
-                    autocomplete="tel"
-                    :class="inputClass"
-                />
-                <span v-if="form.errors.phone" class="text-sm text-brand-red">
-                    {{ form.errors.phone }}
-                </span>
-            </label>
-
-            <label class="flex flex-col gap-2">
+            <label class="flex flex-col gap-2 sm:col-span-2">
                 <span class="text-sm font-medium text-neutral-800">
                     {{ t('contact.message') }}
                 </span>
@@ -158,12 +136,9 @@ const inputClass =
                     v-model="form.message"
                     name="message"
                     rows="4"
-                    class="rounded-[1.5rem] bg-[#F3F3F3] px-5 py-4 text-sm text-neutral-900 outline-none focus:ring-2 focus:ring-neutral-200"
+                    class="w-full resize-none rounded-2xl border border-transparent bg-[#F3F3F3] px-5 py-4 text-sm leading-6 text-neutral-900 transition-colors outline-none focus:border-neutral-300 focus:bg-white"
                 />
-                <span
-                    v-if="form.errors.message"
-                    class="text-sm text-brand-red"
-                >
+                <span v-if="form.errors.message" class="text-sm text-brand-red">
                     {{ form.errors.message }}
                 </span>
             </label>
@@ -171,9 +146,10 @@ const inputClass =
             <button
                 type="submit"
                 :disabled="form.processing"
-                class="mt-2 inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                class="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-4 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60 sm:col-span-2"
             >
                 {{ form.processing ? t('contact.sending') : t('contact.send') }}
+                <span v-if="!form.processing" aria-hidden="true">→</span>
             </button>
         </form>
     </div>

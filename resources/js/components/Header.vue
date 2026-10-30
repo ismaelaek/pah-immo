@@ -7,9 +7,11 @@ import { useLocale } from '@/composables/useLocale';
 const props = withDefaults(
     defineProps<{
         overlay?: boolean;
+        darkNav?: boolean;
     }>(),
     {
         overlay: false,
+        darkNav: false,
     },
 );
 
@@ -18,6 +20,7 @@ const { localized, path, t } = useLocale();
 const overlay = computed(
     () => props.overlay || ['/', '/contact'].includes(path.value),
 );
+const darkNav = computed(() => props.darkNav && !overlay.value);
 
 const links = computed(() => [
     { label: t('nav.home'), href: '/' },
@@ -56,7 +59,9 @@ function isActive(href: string): boolean {
                 :class="
                     overlay
                         ? 'border border-white/50 bg-white/40 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl'
-                        : 'bg-white shadow-[0_8px_30px_rgba(15,23,42,0.08)]'
+                        : darkNav
+                          ? 'bg-neutral-950 shadow-[0_8px_30px_rgba(15,23,42,0.18)]'
+                          : 'bg-white shadow-[0_8px_30px_rgba(15,23,42,0.08)]'
                 "
                 :aria-label="t('nav.primary')"
             >
@@ -69,7 +74,9 @@ function isActive(href: string): boolean {
                     :class="
                         isActive(link.href)
                             ? 'bg-white text-neutral-900 shadow-sm'
-                            : 'text-neutral-900 hover:bg-white/50'
+                            : darkNav
+                              ? 'text-white hover:bg-white/10'
+                              : 'text-neutral-900 hover:bg-white/50'
                     "
                 >
                     {{ link.label }}

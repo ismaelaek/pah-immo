@@ -107,3 +107,32 @@ test('property images generate small, medium and large conversions', function ()
         ->and($resource['images'])->toHaveCount(1)
         ->and($resource['images'][0]['large'])->toContain('conversions/');
 });
+
+test('a property can be created with translated content and keeps a slug from the French title', function () {
+    Livewire::test(CreateProperty::class)
+        ->fillForm([
+            'title' => 'Villa Horizon',
+            'reference' => 'PAH-00001',
+            'description' => 'Une villa lumineuse avec vue mer.',
+            'body' => 'Belle villa.',
+            'offer_type' => OfferType::Sale,
+            'type' => PropertyType::Villa,
+            'price' => 785000,
+            'area' => 220,
+            'city' => 'Nice',
+        ])
+        ->set('activeLocale', 'en')
+        ->fillForm([
+            'title' => 'Horizon Villa',
+            'description' => 'A bright villa with sea view.',
+            'body' => 'Lovely villa.',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $property = Property::query()->sole();
+
+    expect($property->getTranslations('title'))->toBe(['fr' => 'Villa Horizon', 'en' => 'Horizon Villa'])
+        ->and($property->getTranslation('description', 'en'))->toBe('A bright villa with sea view.')
+        ->and($property->slug)->toBe('villa-horizon');
+});

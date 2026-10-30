@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Enums\Locale;
 use App\Enums\NavigationGroup;
 use App\Filament\Pages\Auth\EditProfile;
 use App\Http\Middleware\SetLocale;
@@ -21,6 +22,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -43,6 +45,12 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Red,
             ])
             ->navigationGroups(NavigationGroup::class)
+            ->plugin(
+                SpatieTranslatablePlugin::make()
+                    ->defaultLocales(Locale::values())
+                    ->getLocaleLabelUsing(fn (string $locale): ?string => Locale::tryFrom($locale)?->getNativeLabel())
+                    ->persist(),
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

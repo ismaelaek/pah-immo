@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\Equipment;
+use App\Enums\Locale;
 use App\Enums\MediaCollection;
 use App\Enums\OfferType;
 use App\Enums\PropertyType;
@@ -27,10 +28,10 @@ class PropertyFactory extends Factory
         $offerType = fake()->randomElement(OfferType::cases());
 
         return [
-            'title' => fake()->unique()->sentence(4),
+            'title' => $this->translations(fn (): string => fake()->unique()->sentence(4)),
             'reference' => 'PAH-'.fake()->unique()->numerify('#####'),
-            'description' => fake()->text(156),
-            'body' => fake()->paragraphs(4, true),
+            'description' => $this->translations(fn (): string => fake()->text(156)),
+            'body' => $this->translations(fn (): string => collect(range(1, 4))->map(fn (): string => fake()->paragraph())->implode("\n\n")),
             'type' => fake()->randomElement(PropertyType::cases()),
             'offer_type' => $offerType,
             'price' => $offerType === OfferType::Rent
@@ -90,5 +91,18 @@ class PropertyFactory extends Factory
     private function rentPrice(): int
     {
         return fake()->numberBetween(50, 500) * 10;
+    }
+
+    /**
+     * Generate one value per supported locale.
+     *
+     * @param  callable(): string  $value
+     * @return array<string, string>
+     */
+    private function translations(callable $value): array
+    {
+        return collect(Locale::values())
+            ->mapWithKeys(fn (string $locale): array => [$locale => $value()])
+            ->all();
     }
 }

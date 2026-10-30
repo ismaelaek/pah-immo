@@ -195,3 +195,50 @@ test('the map page applies the search filters within the visible area', function
             ->where('cities', ['Nice', 'Paris'])
             ->has('propertyTypes'));
 });
+
+test('a property page shows the content in the visitor language and falls back to French', function () {
+    $property = Property::factory()->create([
+        'title' => ['fr' => 'Villa Horizon', 'en' => 'Horizon Villa'],
+        'description' => ['fr' => 'Une villa lumineuse.'],
+    ]);
+
+    $this->get(route('properties.show', ['locale' => 'en', 'slug' => $property->slug]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('property.title', 'Horizon Villa')
+            ->where('property.description', 'Une villa lumineuse.'));
+
+    $this->get(route('properties.show', ['locale' => 'fr', 'slug' => $property->slug]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('property.title', 'Villa Horizon'));
+});
+
+test('the search filters are kept in the session and restored when none are given', function () {
+    $villa = Property::factory()->create(['type' => PropertyType::Villa]);
+    Property::factory()->create(['type' => PropertyType::House]);
+
+    $this->get(route('properties', ['locale' => 'en', 'type' => 'villa']))
+        ->assertSessionHas('property_filters', ['type' => 'villa']);
+
+    $this->get(route('properties', ['locale' => 'en']))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('properties.data', 1)
+            ->where('properties.data.0.slug', $villa->slug)
+            ->where('filters.type', 'villa'));
+
+    $this->get(route('properties.map', ['locale' => 'en']))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('properties.data', 1)
+            ->where('filters.type', 'villa'));
+});
+
+test('resetting the search clears the filters kept in the session', function () {
+    Property::factory()->create(['type' => PropertyType::Villa]);
+    Property::factory()->create(['type' => PropertyType::House]);
+
+    $this->withSession(['property_filters' => ['type' => 'villa']])
+        ->get(route('properties', ['locale' => 'en', 'reset' => 1]))
+        ->assertSessionMissing('property_filters')
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('properties.data', 2)
+            ->where('filters', ['type' => '', 'price' => '', 'city' => '', 'rooms' => '']));
+});

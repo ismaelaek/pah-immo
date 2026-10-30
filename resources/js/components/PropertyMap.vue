@@ -6,6 +6,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { Property } from '@/components/PropertyCard.vue';
 import { useLocale } from '@/composables/useLocale';
 import { usePropertyFormatting } from '@/composables/usePropertyFormatting';
+import { propertyVisit } from '@/composables/usePropertyVisit';
 
 type Leaflet = typeof import('leaflet');
 
@@ -108,7 +109,7 @@ function node<K extends keyof HTMLElementTagNameMap>(
 
 function visitProperty(event: Event, href: string): void {
     event.preventDefault();
-    router.visit(href);
+    router.visit(href, propertyVisit);
 }
 
 function popupContent(property: Property): HTMLElement {
@@ -390,7 +391,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="relative isolate size-full">
+    <div class="relative isolate size-full overflow-hidden rounded-[1.75rem]">
         <div
             ref="container"
             class="size-full bg-neutral-100"

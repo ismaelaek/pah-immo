@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Casts\Money;
 use App\Enums\Equipment;
+use App\Enums\Locale;
 use App\Enums\MediaCollection;
 use App\Enums\MediaConversion;
 use App\Enums\OfferType;
@@ -27,6 +28,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * @property int $id
@@ -53,15 +55,34 @@ use Spatie\Sluggable\SlugOptions;
 class Property extends Model implements HasMedia
 {
     /** @use HasFactory<PropertyFactory> */
-    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasSlug, HasTranslations, InteractsWithMedia, SoftDeletes;
+
+    /**
+     * @var list<string>
+     */
+    public array $translatable = ['title', 'description', 'body'];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('title')
+            ->generateSlugsFrom(fn (Property $property): string => $property->defaultTitle())
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate()
             ->preventOverwrite();
+    }
+
+    /**
+     * The title in the default locale, or the first available translation.
+     */
+    public function defaultTitle(): string
+    {
+        $title = $this->getTranslation('title', Locale::default()->value, false);
+
+        if ($title !== '') {
+            return $title;
+        }
+
+        return (string) collect($this->getTranslations('title'))->filter()->first();
     }
 
     public function getRouteKeyName(): string
