@@ -14,6 +14,8 @@ enum Locale: string implements HasColor, HasLabel
     case English = 'en';
     case Italian = 'it';
     case Spanish = 'es';
+    case Chinese = 'zh';
+    case Russian = 'ru';
 
     public static function default(): self
     {
@@ -49,6 +51,8 @@ enum Locale: string implements HasColor, HasLabel
             self::English => 'English',
             self::Italian => 'Italiano',
             self::Spanish => 'Español',
+            self::Chinese => '中文',
+            self::Russian => 'Русский',
         };
     }
 
@@ -59,6 +63,8 @@ enum Locale: string implements HasColor, HasLabel
             self::English => 'Anglais',
             self::Italian => 'Italien',
             self::Spanish => 'Espagnol',
+            self::Chinese => 'Chinois',
+            self::Russian => 'Russe',
         };
     }
 
@@ -72,6 +78,8 @@ enum Locale: string implements HasColor, HasLabel
             self::English => 'gray',
             self::Italian => 'success',
             self::Spanish => 'warning',
+            self::Chinese => 'danger',
+            self::Russian => 'primary',
         };
     }
 }

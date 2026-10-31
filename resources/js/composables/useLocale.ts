@@ -3,7 +3,11 @@ import { computed } from 'vue';
 
 function lookup(source: unknown, key: string): unknown {
     return key.split('.').reduce<unknown>((current, segment) => {
-        if (current !== null && typeof current === 'object' && segment in current) {
+        if (
+            current !== null &&
+            typeof current === 'object' &&
+            segment in current
+        ) {
             return (current as Record<string, unknown>)[segment];
         }
 
@@ -11,11 +15,37 @@ function lookup(source: unknown, key: string): unknown {
     }, source);
 }
 
-function replace(template: string, values: Record<string, string | number>): string {
+function replace(
+    template: string,
+    values: Record<string, string | number>,
+): string {
     return Object.entries(values).reduce(
         (result, [name, value]) => result.replaceAll(`:${name}`, String(value)),
         template,
     );
+}
+
+const pluralCategoryOrder: Intl.LDMLPluralRule[] = [
+    'zero',
+    'one',
+    'two',
+    'few',
+    'many',
+    'other',
+];
+
+/**
+ * Index of the plural form to use, following the language's CLDR rules: plural strings list their
+ * forms in category order (`one|other` in English, `one|few|many` in Russian, a single form in Chinese).
+ */
+function pluralIndexFor(locale: string, count: number): number {
+    const rules = new Intl.PluralRules(locale);
+    const categories = [...rules.resolvedOptions().pluralCategories].sort(
+        (a, b) =>
+            pluralCategoryOrder.indexOf(a) - pluralCategoryOrder.indexOf(b),
+    );
+
+    return Math.max(categories.indexOf(rules.select(count)), 0);
 }
 
 export function useLocale() {
@@ -58,7 +88,10 @@ export function useLocale() {
         return stripped === '' ? '/' : stripped;
     });
 
-    function t(key: string, values: Record<string, string | number> = {}): string {
+    function t(
+        key: string,
+        values: Record<string, string | number> = {},
+    ): string {
         const value = lookup(translations.value, key);
 
         if (typeof value !== 'string') {
@@ -73,7 +106,15 @@ export function useLocale() {
         });
     }
 
-    function tc(key: string, count: number, values: Record<string, string | number> = {}): string {
+    function pluralIndex(count: number): number {
+        return pluralIndexFor(locale.value, count);
+    }
+
+    function tc(
+        key: string,
+        count: number,
+        values: Record<string, string | number> = {},
+    ): string {
         const value = lookup(translations.value, key);
 
         if (typeof value !== 'string') {
@@ -81,7 +122,8 @@ export function useLocale() {
         }
 
         const parts = value.split('|');
-        const template = (count === 1 ? parts[0] : parts[1]) ?? parts[0] ?? value;
+        const template =
+            parts[Math.min(pluralIndex(count), parts.length - 1)] ?? value;
 
         return replace(template, { count, ...values });
     }
