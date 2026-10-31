@@ -8,6 +8,7 @@ use App\Enums\Locale;
 use App\Models\Message;
 use App\Models\Post;
 use App\Models\Property;
+use App\Models\PropertyPicture;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -73,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
             'post' => Post::class,
             'message' => Message::class,
             'property' => Property::class,
+            'property_picture' => PropertyPicture::class,
         ]);
     }
 }

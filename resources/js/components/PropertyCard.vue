@@ -24,8 +24,9 @@ export type Property = {
     body: string | null;
     type: PropertyOption;
     offerType: PropertyOption;
-    price: number;
-    area: number;
+    price: number | null;
+    pricePeriod: string | null;
+    area: number | null;
     bedrooms: number | null;
     bathrooms: number | null;
     neighborhood: string | null;
@@ -43,7 +44,7 @@ const props = defineProps<{
 }>();
 
 const { localized, t, tc } = useLocale();
-const { formatPrice, formatAddress } = usePropertyFormatting();
+const { formatPrice, formatArea, formatAddress } = usePropertyFormatting();
 
 const href = computed(() => localized(`/properties/${props.property.slug}`));
 </script>
@@ -108,7 +109,10 @@ const href = computed(() => localized(`/properties/${props.property.slug}`));
             <p
                 class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-500"
             >
-                <span class="inline-flex items-center gap-1.5">
+                <span
+                    v-if="property.area !== null"
+                    class="inline-flex items-center gap-1.5"
+                >
                     <svg
                         class="size-4"
                         viewBox="0 0 20 20"
@@ -120,10 +124,12 @@ const href = computed(() => localized(`/properties/${props.property.slug}`));
                         <rect x="3.5" y="3.5" width="13" height="13" rx="1.5" />
                         <path d="M7 3.5v13M3.5 8h13" stroke-linecap="round" />
                     </svg>
-                    {{ property.area }}&nbsp;m²
+                    {{ formatArea(property.area) }}
                 </span>
                 <template v-if="property.bedrooms !== null">
-                    <span class="text-neutral-300">·</span>
+                    <span v-if="property.area !== null" class="text-neutral-300"
+                        >·</span
+                    >
                     <span class="inline-flex items-center gap-1.5">
                         <svg
                             class="size-4"
@@ -152,7 +158,13 @@ const href = computed(() => localized(`/properties/${props.property.slug}`));
                     </span>
                 </template>
                 <template v-if="property.bathrooms !== null">
-                    <span class="text-neutral-300">·</span>
+                    <span
+                        v-if="
+                            property.area !== null || property.bedrooms !== null
+                        "
+                        class="text-neutral-300"
+                        >·</span
+                    >
                     <span class="inline-flex items-center gap-1.5">
                         <svg
                             class="size-4"

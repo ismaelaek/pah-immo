@@ -29,7 +29,7 @@ const props = withDefaults(
 );
 
 const { localized, t } = useLocale();
-const { formatPrice, formatAddress } = usePropertyFormatting();
+const { formatPrice, formatArea, formatAddress } = usePropertyFormatting();
 
 const bodyCollapsedHeight = 360;
 const promises = ['promise_reply', 'promise_visit', 'promise_support'] as const;
@@ -51,11 +51,13 @@ const keyFacts = computed<KeyFact[]>(() => {
     }
 
     const facts: (KeyFact | null)[] = [
-        {
-            key: 'area',
-            value: `${props.property.area} m²`,
-            label: t('properties.area'),
-        },
+        props.property.area === null
+            ? null
+            : {
+                  key: 'area',
+                  value: formatArea(props.property.area),
+                  label: t('properties.area'),
+              },
         props.property.bedrooms === null
             ? null
             : {
@@ -205,7 +207,7 @@ watch(
                             </div>
 
                             <h1
-                                class="mt-5 max-w-4xl text-4xl leading-[1.05] font-semibold tracking-tight text-neutral-950 sm:text-5xl lg:text-6xl"
+                                class="mt-5 max-w-4xl text-2xl leading-tight font-semibold tracking-tight text-balance text-neutral-950 sm:text-3xl lg:text-4xl"
                             >
                                 {{ property.title }}
                             </h1>

@@ -1,0 +1,220 @@
+{
+    "id": 181297,
+    "reference": 24367,
+    "agency": 101,
+    "quality": 85,
+    "agency_co_id": null,
+    "brand": null,
+    "sector": null,
+    "user": {
+        "id": "3896",
+        "agency": "101",
+        "active": true,
+        "created_at": "2024-06-15 14:30:00",
+        "updated_at": "2024-06-15 14:30:00",
+        "firstname": "Marie",
+        "lastname": "Dupont",
+        "language": "fr_FR",
+        "group": "1",
+        "email": "marie@example.com",
+        "phone": null,
+        "mobile": null,
+        "fax": null,
+        "birthday_at": null,
+        "timezone": null,
+        "picture": null
+    },
+    "step": 1,
+    "status": 1,
+    "group": 1,
+    "parent": null,
+    "category": 1,
+    "subcategory": null,
+    "name": null,
+    "type": 1,
+    "subtype": 5,
+    "agreement": {
+        "type": 2,
+        "reference": "M-42",
+        "start_at": "2024-06-15",
+        "end_at": null
+    },
+    "block_name": null,
+    "lot_reference": null,
+    "cadastre_reference": null,
+    "stairs_reference": null,
+    "address": null,
+    "address_more": null,
+    "publish_address": false,
+    "country": "FR",
+    "region": { "id": 93, "name": "Provence-Alpes-Côte d'Azur" },
+    "city": { "id": 2123, "name": "Nice", "zipcode": "06000" },
+    "district": null,
+    "location": null,
+    "longitude": 7.25315,
+    "latitude": 43.69821,
+    "radius": 500,
+    "altitude": 10,
+    "area": { "unit": 1, "value": 52.12, "total": null, "weighted": null },
+    "plot": {
+        "net_floor": null,
+        "land_type": null,
+        "width": null,
+        "height": null,
+        "serviced_plot": false
+    },
+    "rooms": 2.5,
+    "bedrooms": 2,
+    "sleeps": 0,
+    "price": {
+        "value": 250000,
+        "max": null,
+        "fees": null,
+        "unit": null,
+        "period": null,
+        "hide": false,
+        "inventory": null,
+        "deposit": null,
+        "currency": "EUR",
+        "commission": null,
+        "transfer_tax": null,
+        "contribution": null,
+        "pension": null,
+        "tenant": null,
+        "vat": null
+    },
+    "rates": [],
+    "residence": {
+        "id": null,
+        "type": null,
+        "fees": 70,
+        "period": 1,
+        "lots": null
+    },
+    "view": { "type": 2, "landscape": ["1", "4"] },
+    "construction": {
+        "method": null,
+        "construction_year": "1975",
+        "construction_step": null,
+        "renovation_year": null,
+        "renovation_cost": null
+    },
+    "floor": { "type": 1, "value": "last", "levels": null, "floors": "6" },
+    "heating": {
+        "device": 1,
+        "devices": ["1"],
+        "access": 2,
+        "type": 3,
+        "types": ["3"]
+    },
+    "water": { "hot_device": null, "hot_access": null, "waste": null },
+    "condition": 3,
+    "standing": null,
+    "style": { "name": null },
+    "twinned": null,
+    "facades": null,
+    "length": null,
+    "height": null,
+    "url": "https://www.example.com/annonce/181297",
+    "availability": null,
+    "available_at": null,
+    "delivered_at": null,
+    "activities": [],
+    "orientations": ["3"],
+    "services": [
+        12,
+        {
+            "type": 30,
+            "comments": [{ "language": "fr", "comment": "Piscine chauffée" }]
+        }
+    ],
+    "proximities": [7, { "type": 2, "length": 300, "length_type": "1" }],
+    "tags": [4],
+    "tags_customized": [],
+    "pictures": [
+        {
+            "id": 66321497,
+            "type_id": 1,
+            "rank": 1,
+            "url": "https://d1.apimo.pro/pictures/66321497.jpg",
+            "width_max": 1920,
+            "height_max": 1440,
+            "internet": "1",
+            "print": "1",
+            "panorama": false,
+            "child": "0",
+            "reference": null,
+            "comments": []
+        }
+    ],
+    "medias": [
+        {
+            "id": "123456",
+            "type": "YouTube",
+            "value": "https://www.youtube.com/watch?v=abc",
+            "internet": "1"
+        }
+    ],
+    "documents": [
+        {
+            "id": "9001",
+            "owner": 181297,
+            "contact": null,
+            "name": "diagnostics.pdf",
+            "url": "https://example.com/d.pdf",
+            "download_url": "https://example.com/d.pdf?download",
+            "filesize": "1000",
+            "type_id": null,
+            "internet": "1",
+            "child": "0",
+            "extranet": "0",
+            "private": "0",
+            "created_at": "2024-06-15 14:30:00",
+            "updated_at": "2024-06-15 14:30:00"
+        }
+    ],
+    "comments": [
+        {
+            "language": "fr",
+            "title": "2P CENTRE NICE",
+            "subtitle": null,
+            "hook": null,
+            "comment": "Bel appartement.",
+            "comment_full": null
+        }
+    ],
+    "areas": [
+        {
+            "type": 18,
+            "number": 1,
+            "area": 12.5,
+            "flooring": null,
+            "ceiling_height": null,
+            "floor": { "type": null, "value": null },
+            "orientations": [],
+            "comments": [],
+            "lot": { "type": null, "rank": null, "name": [] },
+            "beds": { "single": null, "double": 1 },
+            "price": null
+        }
+    ],
+    "regulations": [
+        {
+            "type": 1,
+            "value": "152",
+            "date": "2024-06-15",
+            "label": "D",
+            "graph": null,
+            "graph_i18ns": []
+        }
+    ],
+    "financial": [],
+    "boat": {},
+    "life_annuity": {},
+    "auction": {},
+    "shop": {},
+    "created_at": "2024-06-15 14:30:00",
+    "created_by": "3896",
+    "updated_at": "2024-06-16 09:00:00",
+    "updated_by": "3896"
+}

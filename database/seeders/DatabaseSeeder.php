@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Message;
 use App\Models\Post;
 use App\Models\Property;
+use App\Models\PropertyComment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -32,7 +33,7 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         Property::factory()
-            ->withImages()
+            ->has(PropertyComment::factory()->state(['language' => 'fr']), 'comments')
             ->count(9)
             ->create();
 

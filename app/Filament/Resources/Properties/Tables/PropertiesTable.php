@@ -4,91 +4,91 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Properties\Tables;
 
-use App\Enums\MediaCollection;
 use App\Enums\MediaConversion;
-use App\Enums\OfferType;
-use App\Enums\PropertyType;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
-use Filament\Actions\RestoreBulkAction;
+use App\Models\Property;
+use App\Services\Apimo\CatalogLabels;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
 class PropertiesTable
 {
     public static function configure(Table $table): Table
     {
+        $catalogLabels = app(CatalogLabels::class);
+
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('images')
+                ImageColumn::make('cover')
                     ->label(__('Image'))
-                    ->collection(MediaCollection::Images->value)
-                    ->conversion(MediaConversion::Small->value)
-                    ->limit(1)
+                    ->state(fn (Property $record): ?string => $record->pictures->first()?->imageUrl(MediaConversion::Small))
                     ->square(),
                 TextColumn::make('reference')
                     ->label(__('Reference'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('-'),
                 TextColumn::make('title')
                     ->label(__('Title'))
-                    ->searchable()
-                    ->sortable()
-                    ->limit(50),
-                TextColumn::make('offer_type')
+                    ->state(fn (Property $record): ?string => $record->commentIn(app()->getLocale())?->title)
+                    ->limit(50)
+                    ->placeholder('-'),
+                TextColumn::make('category')
                     ->label(__('Offer type'))
                     ->badge()
+                    ->formatStateUsing(fn (int $state): string => $catalogLabels->label('property_category', $state) ?? (string) $state)
                     ->sortable(),
                 TextColumn::make('type')
                     ->label(__('Property type'))
+                    ->formatStateUsing(fn (int $state): string => $catalogLabels->label('property_type', $state) ?? (string) $state)
                     ->sortable(),
-                TextColumn::make('city')
+                TextColumn::make('city_name')
                     ->label(__('City'))
                     ->searchable()
-                    ->sortable(),
-                TextColumn::make('price')
+                    ->sortable()
+                    ->placeholder('-'),
+                TextColumn::make('price_value')
                     ->label(__('Price'))
-                    ->money('EUR', decimalPlaces: 0)
-                    ->sortable(),
-                TextColumn::make('area')
+                    ->money(fn (Property $record): string => $record->price_currency, decimalPlaces: 0)
+                    ->sortable()
+                    ->placeholder('-'),
+                IconColumn::make('price_hide')
+                    ->label(__('Hidden on the website'))
+                    ->boolean()
+                    ->toggleable(),
+                TextColumn::make('area_value')
                     ->label(__('Area'))
+                    ->numeric(decimalPlaces: 0)
                     ->suffix(' m²')
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->label(__('Created at'))
+                    ->sortable()
+                    ->placeholder('-'),
+                TextColumn::make('updated_at')
+                    ->label(__('Updated at'))
                     ->dateTime(config('app.datetime_format'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('updated_at', 'desc')
             ->paginated([12, 24, 48, 96])
             ->defaultPaginationPageOption(12)
             ->filters([
-                SelectFilter::make('offer_type')
+                SelectFilter::make('category')
                     ->label(__('Offer type'))
-                    ->options(OfferType::class),
+                    ->options(fn (): array => collect($catalogLabels->options('property_category'))->pluck('label', 'value')->all()),
                 SelectFilter::make('type')
                     ->label(__('Property type'))
-                    ->options(PropertyType::class)
+                    ->options(fn (): array => collect($catalogLabels->options('property_type'))->pluck('label', 'value')->all())
                     ->multiple(),
-                TrashedFilter::make(),
+                SelectFilter::make('city_name')
+                    ->label(__('City'))
+                    ->options(fn (): array => collect(Property::cities())->mapWithKeys(fn (string $city): array => [$city => $city])->all())
+                    ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
             ]);
     }
 }

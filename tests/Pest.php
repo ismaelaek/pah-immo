@@ -50,3 +50,26 @@ function something()
 {
     // ..
 }
+
+/**
+ * Load an Apimo response fixture from tests/Fixtures/apimo, with top-level overrides.
+ *
+ * @param  array<string, mixed>  $overrides
+ * @return array<string, mixed>
+ */
+function apimoFixture(string $name, array $overrides = []): array
+{
+    $fixture = json_decode((string) file_get_contents(__DIR__."/Fixtures/apimo/{$name}.json"), true, flags: JSON_THROW_ON_ERROR);
+
+    return array_replace($fixture, $overrides);
+}
+
+function configureApimo(int $dailyRequestBudget = 900): void
+{
+    config([
+        'services.apimo.provider_id' => '1234',
+        'services.apimo.token' => 'secret-token',
+        'services.apimo.base_url' => 'https://api.apimo.pro',
+        'services.apimo.daily_request_budget' => $dailyRequestBudget,
+    ]);
+}

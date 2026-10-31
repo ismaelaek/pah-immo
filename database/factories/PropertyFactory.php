@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\Equipment;
-use App\Enums\Locale;
-use App\Enums\MediaCollection;
-use App\Enums\OfferType;
-use App\Enums\PropertyType;
+use App\Models\Agency;
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\File;
 
 /**
  * @extends Factory<Property>
@@ -25,84 +20,63 @@ class PropertyFactory extends Factory
      */
     public function definition(): array
     {
-        $offerType = fake()->randomElement(OfferType::cases());
+        $date = fake()->dateTimeBetween('-2 years')->format('Y-m-d H:i:s');
 
         return [
-            'title' => $this->translations(fn (): string => fake()->unique()->sentence(4)),
-            'reference' => 'PAH-'.fake()->unique()->numerify('#####'),
-            'description' => $this->translations(fn (): string => fake()->text(156)),
-            'body' => $this->translations(fn (): string => collect(range(1, 4))->map(fn (): string => fake()->paragraph())->implode("\n\n")),
-            'type' => fake()->randomElement(PropertyType::cases()),
-            'offer_type' => $offerType,
-            'price' => $offerType === OfferType::Rent
-                ? $this->rentPrice()
-                : $this->salePrice(),
-            'area' => fake()->numberBetween(20, 400),
-            'bedrooms' => fake()->numberBetween(1, 6),
-            'bathrooms' => fake()->numberBetween(1, 4),
-            'neighborhood' => fake()->streetName(),
-            'city' => fake()->randomElement(['Paris', 'Lyon', 'Bordeaux', 'Nice']),
-            'latitude' => fake()->latitude(43, 49),
+            'apimo_id' => fake()->unique()->numberBetween(100000, 99999999),
+            'reference' => fake()->numerify('#####'),
+            'agency' => fake()->numberBetween(1, 99999),
+            'quality' => fake()->numberBetween(0, 100),
+            'step' => 1,
+            'status' => 1,
+            'group' => 1,
+            'category' => fake()->randomElement([1, 2]),
+            'type' => fake()->numberBetween(1, 10),
+            'subtype' => fake()->numberBetween(1, 40),
+            'publish_address' => false,
+            'country' => 'FR',
+            'city_id' => fake()->numberBetween(1, 50000),
+            'city_name' => fake()->city(),
+            'city_zipcode' => fake()->postcode(),
             'longitude' => fake()->longitude(-1, 7),
-            'equipment' => fake()->randomElements(Equipment::cases(), fake()->numberBetween(2, 6)),
+            'latitude' => fake()->latitude(43, 49),
+            'radius' => 500,
+            'altitude' => 0,
+            'area_unit' => 1,
+            'area_value' => fake()->randomFloat(2, 20, 400),
+            'plot_serviced_plot' => false,
+            'rooms' => fake()->numberBetween(1, 8),
+            'bedrooms' => fake()->numberBetween(0, 6),
+            'sleeps' => 0,
+            'price_value' => fake()->numberBetween(100000, 2000000),
+            'price_hide' => false,
+            'price_currency' => 'EUR',
+            'rates' => [],
+            'view_landscape' => [],
+            'activities' => [],
+            'orientations' => [],
+            'tags' => [],
+            'tags_customized' => [],
+            'financial' => [],
+            'created_at' => $date,
+            'created_by' => (string) fake()->numberBetween(1, 9999),
+            'updated_at' => $date,
+            'updated_by' => (string) fake()->numberBetween(1, 9999),
         ];
     }
 
-    public function forSale(): static
+    public function forAgency(Agency $agency): static
     {
         return $this->state(fn (): array => [
-            'offer_type' => OfferType::Sale,
-            'price' => $this->salePrice(),
+            'agency' => (int) $agency->apimo_id,
         ]);
     }
 
-    public function forRent(): static
+    public function childOf(Property $parent): static
     {
         return $this->state(fn (): array => [
-            'offer_type' => OfferType::Rent,
-            'price' => $this->rentPrice(),
+            'agency' => $parent->agency,
+            'parent' => $parent->apimo_id,
         ]);
-    }
-
-    public function withImages(int $count = 3): static
-    {
-        return $this->afterCreating(function (Property $property) use ($count): void {
-            $images = File::files(database_path('factories/media/posts'));
-
-            foreach (fake()->randomElements($images, min($count, count($images))) as $image) {
-                $property->addMedia($image->getPathname())
-                    ->preservingOriginal()
-                    ->toMediaCollection(MediaCollection::Images->value);
-            }
-        });
-    }
-
-    /**
-     * A sale price in euros, rounded to the thousand.
-     */
-    private function salePrice(): int
-    {
-        return fake()->numberBetween(80, 1_500) * 1_000;
-    }
-
-    /**
-     * A monthly rent in euros, rounded to ten.
-     */
-    private function rentPrice(): int
-    {
-        return fake()->numberBetween(50, 500) * 10;
-    }
-
-    /**
-     * Generate one value per supported locale.
-     *
-     * @param  callable(): string  $value
-     * @return array<string, string>
-     */
-    private function translations(callable $value): array
-    {
-        return collect(Locale::values())
-            ->mapWithKeys(fn (string $locale): array => [$locale => $value()])
-            ->all();
     }
 }

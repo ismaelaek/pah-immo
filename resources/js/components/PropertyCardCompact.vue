@@ -20,7 +20,7 @@ const emit = defineEmits<{
 }>();
 
 const { localized, t, tc } = useLocale();
-const { formatPrice, formatAddress } = usePropertyFormatting();
+const { formatPrice, formatArea, formatAddress } = usePropertyFormatting();
 </script>
 
 <template>
@@ -79,9 +79,13 @@ const { formatPrice, formatAddress } = usePropertyFormatting();
                 <span class="truncate">{{ formatAddress(property) }}</span>
             </p>
             <p class="text-xs text-neutral-500">
-                {{ property.area }}&nbsp;m²
+                <template v-if="property.area !== null">
+                    {{ formatArea(property.area) }}
+                </template>
                 <template v-if="property.bedrooms !== null">
-                    <span class="text-neutral-300">·</span>
+                    <span v-if="property.area !== null" class="text-neutral-300"
+                        >·</span
+                    >
                     {{ tc('property.bedrooms', property.bedrooms) }}
                 </template>
             </p>

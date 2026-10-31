@@ -30,6 +30,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'apimo' => [
+        'provider_id' => env('APIMO_PROVIDER_ID'),
+        'token' => env('APIMO_TOKEN'),
+        'base_url' => env('APIMO_BASE_URL', 'https://api.apimo.pro'),
+        'daily_request_budget' => (int) env('APIMO_DAILY_REQUEST_BUDGET', 900),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Properties;
 
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Properties\Pages\CreateProperty;
-use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\Pages\ListProperties;
 use App\Filament\Resources\Properties\Pages\ViewProperty;
-use App\Filament\Resources\Properties\Schemas\PropertyForm;
+use App\Filament\Resources\Properties\RelationManagers\AreasRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\DocumentsRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\MediasRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\RegulationsRelationManager;
 use App\Filament\Resources\Properties\Schemas\PropertyInfolist;
 use App\Filament\Resources\Properties\Tables\PropertiesTable;
 use App\Models\Property;
@@ -18,22 +19,21 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
+/**
+ * Read-only view of the properties imported from Apimo: Apimo is the source of truth, so they are edited there.
+ */
 class PropertyResource extends Resource
 {
-    use Translatable;
-
     protected static ?string $model = Property::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHomeModern;
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroup::RealEstate;
-
-    protected static ?string $recordTitleAttribute = 'title';
 
     public static function getNavigationLabel(): string
     {
@@ -50,17 +50,26 @@ class PropertyResource extends Resource
         return __('properties');
     }
 
+    public static function getRecordTitle(?Model $record): string|Htmlable|null
+    {
+        if (! $record instanceof Property) {
+            return null;
+        }
+
+        return $record->reference ?? '#'.$record->apimo_id;
+    }
+
     /**
      * @return list<string>
      */
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title', 'reference', 'city'];
+        return ['reference', 'city_name'];
     }
 
-    public static function form(Schema $schema): Schema
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
-        return PropertyForm::configure($schema);
+        return static::getRecordTitle($record) ?? '';
     }
 
     public static function infolist(Schema $schema): Schema
@@ -76,7 +85,10 @@ class PropertyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AreasRelationManager::class,
+            RegulationsRelationManager::class,
+            DocumentsRelationManager::class,
+            MediasRelationManager::class,
         ];
     }
 
@@ -84,23 +96,33 @@ class PropertyResource extends Resource
     {
         return [
             'index' => ListProperties::route('/'),
-            'create' => CreateProperty::route('/create'),
             'view' => ViewProperty::route('/{record}'),
-            'edit' => EditProperty::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return false;
     }
 
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['media']);
-    }
-
-    public static function getRecordRouteBindingEloquentQuery(): Builder
-    {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+            ->with(['comments', 'pictures.media']);
     }
 }

@@ -42,7 +42,7 @@ const emit = defineEmits<{
 }>();
 
 const { localized, t, tc } = useLocale();
-const { formatPrice, formatCompactPrice, formatAddress } =
+const { formatPrice, formatCompactPrice, formatArea, formatAddress } =
     usePropertyFormatting();
 
 const container = ref<HTMLElement | null>(null);
@@ -164,13 +164,16 @@ function popupContent(property: Property): HTMLElement {
     address.append(node('span', 'truncate', formatAddress(property)));
 
     const specs = node('p', 'text-xs text-neutral-500');
-    specs.append(`${property.area}\u00a0m²`);
+    if (property.area !== null) {
+        specs.append(formatArea(property.area));
+    }
 
     if (property.bedrooms !== null) {
-        specs.append(
-            node('span', 'text-neutral-300', ' · '),
-            `${tc('property.bedrooms', property.bedrooms)}`,
-        );
+        if (property.area !== null) {
+            specs.append(node('span', 'text-neutral-300', ' · '));
+        }
+
+        specs.append(`${tc('property.bedrooms', property.bedrooms)}`);
     }
 
     const footer = node('div', 'flex items-center justify-between gap-3 pt-1');

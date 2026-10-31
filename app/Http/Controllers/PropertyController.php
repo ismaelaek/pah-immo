@@ -6,11 +6,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\MediaConversion;
 use App\Enums\PriceRange;
-use App\Enums\PropertyType;
 use App\Enums\RoomFilter;
 use App\Http\Resources\PropertyResource;
 use App\Models\Property;
+use App\Services\Apimo\CatalogLabels;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,12 +24,14 @@ class PropertyController extends Controller
 
     private const array FILTER_KEYS = ['type', 'price', 'city', 'rooms'];
 
+    public function __construct(private readonly CatalogLabels $catalogLabels) {}
+
     public function index(Request $request): Response
     {
         $filters = $this->searchFilters($request);
 
         $properties = Property::query()
-            ->with('media')
+            ->with(PropertyResource::RELATIONS)
             ->matchingSearch(...$filters)
             ->latest()
             ->orderByDesc('id')
@@ -39,7 +42,7 @@ class PropertyController extends Controller
         return Inertia::render('Properties', [
             'properties' => $properties,
             'filters' => $this->filterValues($filters),
-            'propertyTypes' => PropertyType::options(),
+            'propertyTypes' => $this->catalogLabels->options('property_type'),
             'cities' => Property::cities(),
         ]);
     }
@@ -50,13 +53,11 @@ class PropertyController extends Controller
         $bounds = $this->mapBounds($request->string('bounds')->toString());
 
         $query = Property::query()
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
             ->matchingSearch(...$filters)
             ->when($bounds, fn (Builder $query, array $bounds): Builder => $query->withinBounds(...$bounds));
 
         $properties = $query
-            ->with('media')
+            ->with(PropertyResource::RELATIONS)
             ->latest()
             ->orderByDesc('id')
             ->paginate(self::MAP_RESULTS_PER_PAGE)
@@ -68,36 +69,49 @@ class PropertyController extends Controller
             'total' => $properties->total(),
             'bounds' => $bounds,
             'filters' => $this->filterValues($filters),
-            'propertyTypes' => fn (): array => PropertyType::options(),
+            'propertyTypes' => fn (): array => $this->catalogLabels->options('property_type'),
             'cities' => fn (): array => Property::cities(),
         ]);
     }
 
-    public function show(string $locale, string $slug): Response
+    /**
+     * The slug starts with the local id; any other slug for the same property redirects to the current one.
+     */
+    public function show(Request $request, string $locale, string $slug): Response|RedirectResponse
     {
-        $property = Property::query()
-            ->with('media')
-            ->where('slug', $slug)
-            ->first();
+        $id = Property::idFromRouteSlug($slug);
+
+        $property = $id === null
+            ? null
+            : Property::query()->with(PropertyResource::RELATIONS)->find($id);
+
+        if ($property === null) {
+            return Inertia::render('PropertyShow', [
+                'property' => null,
+                'similarProperties' => [],
+            ]);
+        }
+
+        $resource = (new PropertyResource($property, MediaConversion::Large))->resolve($request);
+
+        if ($resource['slug'] !== $slug) {
+            return redirect()->route('properties.show', ['locale' => $locale, 'slug' => $resource['slug']], 301);
+        }
 
         return Inertia::render('PropertyShow', [
-            'property' => $property === null
-                ? null
-                : (new PropertyResource($property, MediaConversion::Large))->resolve(),
-            'similarProperties' => $property === null
-                ? []
-                : Property::query()
-                    ->with('media')
-                    ->whereKeyNot($property->id)
-                    ->where(fn (Builder $query): Builder => $query
-                        ->where('city', $property->city)
-                        ->orWhere('type', $property->type))
-                    ->latest()
-                    ->orderByDesc('id')
-                    ->limit(3)
-                    ->get()
-                    ->map(fn (Property $similar): array => (new PropertyResource($similar))->resolve())
-                    ->all(),
+            'property' => $resource,
+            'similarProperties' => Property::query()
+                ->with(PropertyResource::RELATIONS)
+                ->whereKeyNot($property->id)
+                ->where(fn (Builder $query): Builder => $query
+                    ->where('city_id', $property->city_id)
+                    ->orWhere('type', $property->type))
+                ->latest()
+                ->orderByDesc('id')
+                ->limit(3)
+                ->get()
+                ->map(fn (Property $similar): array => (new PropertyResource($similar))->resolve())
+                ->all(),
         ]);
     }
 
@@ -105,7 +119,7 @@ class PropertyController extends Controller
      * Read the search filters from the request, or restore the ones saved in
      * the session when the request carries none. `reset` clears them.
      *
-     * @return array{type: PropertyType|null, priceRange: PriceRange|null, rooms: RoomFilter|null, city: string}
+     * @return array{type: int|null, priceRange: PriceRange|null, rooms: RoomFilter|null, city: string}
      */
     private function searchFilters(Request $request): array
     {
@@ -123,7 +137,7 @@ class PropertyController extends Controller
         $value = fn (string $key): string => is_string($values[$key] ?? null) ? trim($values[$key]) : '';
 
         return [
-            'type' => PropertyType::tryFrom($value('type')),
+            'type' => ctype_digit($value('type')) ? (int) $value('type') : null,
             'priceRange' => PriceRange::tryFrom($value('price')),
             'rooms' => RoomFilter::tryFrom($value('rooms')),
             'city' => $value('city'),
@@ -131,13 +145,13 @@ class PropertyController extends Controller
     }
 
     /**
-     * @param  array{type: PropertyType|null, priceRange: PriceRange|null, rooms: RoomFilter|null, city: string}  $filters
+     * @param  array{type: int|null, priceRange: PriceRange|null, rooms: RoomFilter|null, city: string}  $filters
      * @return array{type: string, price: string, city: string, rooms: string}
      */
     private function filterValues(array $filters): array
     {
         return [
-            'type' => $filters['type']->value ?? '',
+            'type' => $filters['type'] === null ? '' : (string) $filters['type'],
             'price' => $filters['priceRange']->value ?? '',
             'city' => $filters['city'],
             'rooms' => $filters['rooms']->value ?? '',

@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
-use App\Enums\Equipment;
-use App\Enums\MediaCollection;
-use App\Enums\OfferType;
-use App\Enums\PropertyType;
-use App\Filament\Resources\Properties\Pages\CreateProperty;
-use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\Pages\ListProperties;
-use App\Http\Resources\PropertyResource;
+use App\Filament\Resources\Properties\Pages\ViewProperty;
+use App\Filament\Resources\Properties\PropertyResource;
+use App\Filament\Resources\Properties\RelationManagers\AreasRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\DocumentsRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\MediasRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\RegulationsRelationManager;
+use App\Models\Agency;
+use App\Models\CatalogEntry;
 use App\Models\Property;
+use App\Models\PropertyArea;
+use App\Models\PropertyComment;
+use App\Models\PropertyDocument;
+use App\Models\PropertyMedia;
+use App\Models\PropertyRegulation;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use Filament\Actions\Testing\TestAction;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -28,111 +33,64 @@ test('properties are listed in the admin panel', function () {
         ->assertCanSeeTableRecords($properties);
 });
 
-test('a property can be created with equipment', function () {
-    Livewire::test(CreateProperty::class)
-        ->fillForm([
-            'title' => 'Villa Horizon',
-            'reference' => 'PAH-00001',
-            'description' => 'A bright villa with sea view.',
-            'body' => 'Lovely villa.',
-            'offer_type' => OfferType::Sale,
-            'type' => PropertyType::Villa,
-            'price' => 785000,
-            'area' => 220,
-            'bedrooms' => 5,
-            'bathrooms' => null,
-            'city' => 'Nice',
-            'equipment' => [Equipment::SwimmingPool->value, Equipment::Garden->value],
-        ])
-        ->call('create')
-        ->assertHasNoFormErrors();
+test('the list shows apimo catalog labels and filters by property type', function () {
+    CatalogEntry::factory()->create(['catalog' => 'property_type', 'apimo_id' => 2, 'culture' => 'fr_FR', 'name' => 'Maison']);
+    $house = Property::factory()->create(['type' => 2]);
+    $apartment = Property::factory()->create(['type' => 1]);
 
-    $property = Property::query()->sole();
-
-    expect($property)
-        ->slug->toBe('villa-horizon')
-        ->offer_type->toBe(OfferType::Sale)
-        ->type->toBe(PropertyType::Villa)
-        ->bathrooms->toBeNull()
-        ->and($property->equipment->all())->toBe([Equipment::SwimmingPool, Equipment::Garden]);
+    Livewire::test(ListProperties::class)
+        ->assertTableColumnFormattedStateSet('type', 'Maison', $house)
+        ->filterTable('type', ['2'])
+        ->assertCanSeeTableRecords([$house])
+        ->assertCanNotSeeTableRecords([$apartment]);
 });
 
-test('the slug is filled from the title when creating a property', function () {
-    Livewire::test(CreateProperty::class)
-        ->fillForm(['title' => 'Villa Côte Sud'])
-        ->assertSchemaStateSet(['slug' => 'villa-cote-sud']);
+test('properties can be searched by reference', function () {
+    $match = Property::factory()->create(['reference' => 'PAH-00042']);
+    $other = Property::factory()->create(['reference' => 'PAH-00099']);
+
+    Livewire::test(ListProperties::class)
+        ->searchTable('00042')
+        ->assertCanSeeTableRecords([$match])
+        ->assertCanNotSeeTableRecords([$other]);
 });
 
-test('the slug is kept when the title changes on an existing property', function () {
-    $property = Property::factory()->create(['title' => 'Villa Horizon']);
+test('the property page shows the apimo details', function () {
+    Agency::factory()->create(['apimo_id' => '101', 'name' => 'Agence Riviera']);
+    $property = Property::factory()->create(['agency' => 101]);
+    PropertyComment::factory()->for($property)->create(['language' => 'fr', 'title' => 'Villa Horizon']);
+    PropertyArea::factory()->for($property)->create(['type' => 8, 'number' => 2]);
 
-    Livewire::test(EditProperty::class, ['record' => $property->slug])
-        ->fillForm(['title' => 'Villa Horizon Renovated'])
-        ->assertSchemaStateSet(['slug' => 'villa-horizon']);
+    Livewire::test(ViewProperty::class, ['record' => $property->id])
+        ->assertOk()
+        ->assertSee('Villa Horizon')
+        ->assertSee('Agence Riviera')
+        ->assertSchemaStateSet(['bathrooms' => 2])
+        ->assertActionHasUrl(TestAction::make('viewOnWebsite'), route('properties.show', ['locale' => 'fr', 'slug' => (string) $property->id]));
 });
 
-test('a property reference must be unique', function () {
-    Property::factory()->create(['reference' => 'PAH-00001']);
-
-    Livewire::test(CreateProperty::class)
-        ->fillForm([
-            'reference' => 'PAH-00001',
-        ])
-        ->call('create')
-        ->assertHasFormErrors(['reference' => 'unique']);
-});
-
-test('a property can keep its own reference when edited', function () {
-    $property = Property::factory()->create(['reference' => 'PAH-00001']);
-
-    Livewire::test(EditProperty::class, ['record' => $property->slug])
-        ->fillForm(['title' => 'Updated title'])
-        ->call('save')
-        ->assertHasNoFormErrors();
-
-    expect($property->refresh()->title)->toBe('Updated title');
-});
-
-test('property images generate small, medium and large conversions', function () {
-    Storage::fake('public');
-
+test('properties cannot be created, edited or deleted from the admin panel', function () {
     $property = Property::factory()->create();
-    $media = $property->addMedia(UploadedFile::fake()->image('front.jpg', 2000, 1500))
-        ->toMediaCollection(MediaCollection::Images->value);
 
-    $resource = (new PropertyResource($property->refresh()))->resolve();
-
-    expect($media->refresh()->getGeneratedConversions()->filter()->keys()->all())
-        ->toEqualCanonicalizing(['small', 'medium', 'large'])
-        ->and($resource['images'])->toHaveCount(1)
-        ->and($resource['images'][0]['large'])->toContain('conversions/');
+    expect(PropertyResource::canCreate())->toBeFalse()
+        ->and(PropertyResource::canEdit($property))->toBeFalse()
+        ->and(PropertyResource::canDelete($property))->toBeFalse()
+        ->and(PropertyResource::canDeleteAny())->toBeFalse()
+        ->and(array_keys(PropertyResource::getPages()))->toBe(['index', 'view']);
 });
 
-test('a property can be created with translated content and keeps a slug from the French title', function () {
-    Livewire::test(CreateProperty::class)
-        ->fillForm([
-            'title' => 'Villa Horizon',
-            'reference' => 'PAH-00001',
-            'description' => 'Une villa lumineuse avec vue mer.',
-            'body' => 'Belle villa.',
-            'offer_type' => OfferType::Sale,
-            'type' => PropertyType::Villa,
-            'price' => 785000,
-            'area' => 220,
-            'city' => 'Nice',
-        ])
-        ->set('activeLocale', 'en')
-        ->fillForm([
-            'title' => 'Horizon Villa',
-            'description' => 'A bright villa with sea view.',
-            'body' => 'Lovely villa.',
-        ])
-        ->call('create')
-        ->assertHasNoFormErrors();
+test('the property page lists its rooms, diagnostics, documents and videos', function (string $relationManager, string $factory, array $attributes, string $expected) {
+    CatalogEntry::factory()->create(['catalog' => 'property_areas', 'apimo_id' => 8, 'culture' => 'fr_FR', 'name' => 'Salle de bains']);
+    CatalogEntry::factory()->create(['catalog' => 'property_regulation', 'apimo_id' => 1, 'culture' => 'fr_FR', 'name' => 'DPE']);
+    $property = Property::factory()->create();
+    $factory::factory()->for($property)->create($attributes);
 
-    $property = Property::query()->sole();
-
-    expect($property->getTranslations('title'))->toBe(['fr' => 'Villa Horizon', 'en' => 'Horizon Villa'])
-        ->and($property->getTranslation('description', 'en'))->toBe('A bright villa with sea view.')
-        ->and($property->slug)->toBe('villa-horizon');
-});
+    Livewire::test($relationManager, ['ownerRecord' => $property, 'pageClass' => ViewProperty::class])
+        ->assertOk()
+        ->assertSee($expected);
+})->with([
+    'rooms' => [AreasRelationManager::class, PropertyArea::class, ['type' => 8], 'Salle de bains'],
+    'diagnostics' => [RegulationsRelationManager::class, PropertyRegulation::class, ['type' => 1, 'label' => 'D'], 'DPE'],
+    'documents' => [DocumentsRelationManager::class, PropertyDocument::class, ['name' => 'diagnostics.pdf'], 'diagnostics.pdf'],
+    'videos' => [MediasRelationManager::class, PropertyMedia::class, ['type' => 'Matterport'], 'Matterport'],
+]);
