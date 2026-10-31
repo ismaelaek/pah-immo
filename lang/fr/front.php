@@ -63,6 +63,55 @@ return [
     ],
     'about' => [
         'title' => 'À propos',
+        'description' => 'PAH Immo accompagne particuliers et promoteurs dans la vente et l\'acquisition de biens neufs et anciens sur la Côte d\'Azur. Accueil uniquement sur rendez-vous.',
+        'eyebrow' => 'Agence immobilière · Côte d\'Azur',
+        'hero_title' => 'Votre projet immobilier sur la Côte d\'Azur, accompagné de bout en bout.',
+        'hero_body' => 'PAH Immo accompagne les particuliers et les promoteurs dans leurs projets de vente et d\'acquisition de biens neufs et anciens sur la Côte d\'Azur : appartements, maisons, terrains et biens de prestige.',
+        'hero_alt' => 'Séjour lumineux d\'un bien accompagné par PAH Immo',
+        'badge_title' => 'Sur rendez-vous',
+        'badge_body' => 'Un interlocuteur unique, disponible pour vous.',
+        'facts' => [
+            'Particuliers & promoteurs',
+            'Vente & acquisition',
+            'Neuf & ancien',
+        ],
+        'expertise_title' => 'Les biens que nous accompagnons',
+        'expertise' => [
+            [
+                'title' => 'Appartements',
+                'body' => 'Neufs ou anciens, à vendre ou à acquérir.',
+            ],
+            [
+                'title' => 'Maisons',
+                'body' => 'Pour une résidence principale ou secondaire.',
+            ],
+            [
+                'title' => 'Terrains',
+                'body' => 'Pour faire construire ou pour un projet de promotion.',
+            ],
+            [
+                'title' => 'Biens de prestige',
+                'body' => 'Des biens d\'exception, avec toute la discrétion qu\'ils demandent.',
+            ],
+        ],
+        'founder_eyebrow' => 'Le dirigeant',
+        'founder_name' => 'Pierre-Alain Héraud',
+        'founder_role' => 'Entrepreneur individuel',
+        'founder_body' => 'L\'agence est dirigée par Pierre-Alain Héraud, entrepreneur individuel, professionnel de la transaction immobilière.',
+        'founder_paragraphs' => [
+            'Il suit lui-même chaque projet, de la première rencontre jusqu\'à la signature : un interlocuteur unique, qui connaît votre dossier et reste joignable à chaque étape.',
+            'Vendeurs ou acquéreurs, particuliers ou promoteurs : chaque projet commence par un rendez-vous, pour prendre le temps de comprendre vos attentes avant de vous proposer une démarche adaptée.',
+        ],
+        'founder_points' => [
+            'Un interlocuteur unique',
+            'Accueil sur rendez-vous',
+            'Sans détention de fonds',
+        ],
+        'appointment_title' => 'Accueil uniquement sur rendez-vous',
+        'appointment_body' => 'Pour prendre rendez-vous, appelez-nous ou écrivez-nous : nous convenons ensemble d\'un moment pour parler de votre projet.',
+        'call' => 'Appeler',
+        'email' => 'Écrire un e-mail',
+        'contact_form' => 'Formulaire de contact',
     ],
     'properties' => [
         'title' => 'Biens immobiliers',

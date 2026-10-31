@@ -63,6 +63,55 @@ return [
     ],
     'about' => [
         'title' => 'About',
+        'description' => 'PAH Immo supports private clients and developers in selling and buying new and existing properties on the French Riviera. By appointment only.',
+        'eyebrow' => 'Real estate agency · French Riviera',
+        'hero_title' => 'Your property project on the French Riviera, supported from start to finish.',
+        'hero_body' => 'PAH Immo supports private clients and developers in selling and buying new and existing properties on the French Riviera: apartments, houses, land and prestige properties.',
+        'hero_alt' => 'Bright living room in a property handled by PAH Immo',
+        'badge_title' => 'By appointment',
+        'badge_body' => 'A single point of contact, available for you.',
+        'facts' => [
+            'Private clients & developers',
+            'Selling & buying',
+            'New & existing',
+        ],
+        'expertise_title' => 'The properties we handle',
+        'expertise' => [
+            [
+                'title' => 'Apartments',
+                'body' => 'New or existing, to sell or to buy.',
+            ],
+            [
+                'title' => 'Houses',
+                'body' => 'For a main or second home.',
+            ],
+            [
+                'title' => 'Land',
+                'body' => 'To build on or for a development project.',
+            ],
+            [
+                'title' => 'Prestige properties',
+                'body' => 'Exceptional properties, with all the discretion they call for.',
+            ],
+        ],
+        'founder_eyebrow' => 'Managing director',
+        'founder_name' => 'Pierre-Alain Héraud',
+        'founder_role' => 'Sole trader',
+        'founder_body' => 'The agency is run by Pierre-Alain Héraud, a sole trader and real estate transaction professional.',
+        'founder_paragraphs' => [
+            'He handles each project himself, from the first meeting to the signing: a single point of contact who knows your file and can be reached at every step.',
+            'Sellers or buyers, private clients or developers: every project starts with an appointment, taking the time to understand your expectations before suggesting the right approach.',
+        ],
+        'founder_points' => [
+            'A single point of contact',
+            'By appointment',
+            'No client funds held',
+        ],
+        'appointment_title' => 'By appointment only',
+        'appointment_body' => 'To book an appointment, call or write to us: we will agree on a time together to talk about your project.',
+        'call' => 'Call',
+        'email' => 'Send an email',
+        'contact_form' => 'Contact form',
     ],
     'properties' => [
         'title' => 'Properties',

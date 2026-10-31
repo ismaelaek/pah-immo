@@ -61,6 +61,14 @@ class Agency extends Model
     public $timestamps = false;
 
     /**
+     * The agency running the website: the Apimo account is connected to a single agency, the first active one.
+     */
+    public static function current(): ?self
+    {
+        return static::query()->where('active', true)->orderBy('id')->first();
+    }
+
+    /**
      * Properties whose Apimo `agency` (integer) matches this agency's Apimo `id` (string).
      *
      * @return HasMany<Property, $this>

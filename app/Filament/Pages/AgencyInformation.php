@@ -39,7 +39,7 @@ class AgencyInformation extends Page
 
     public function content(Schema $schema): Schema
     {
-        $agency = $this->agency();
+        $agency = Agency::current();
 
         if ($agency === null) {
             return $schema->components([
@@ -50,13 +50,5 @@ class AgencyInformation extends Page
         }
 
         return AgencyInfolist::configure($schema->record($agency));
-    }
-
-    /**
-     * The Apimo account is connected to a single agency: the first active one.
-     */
-    private function agency(): ?Agency
-    {
-        return Agency::query()->where('active', true)->orderBy('id')->first();
     }
 }

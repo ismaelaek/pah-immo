@@ -63,6 +63,55 @@ return [
     ],
     'about' => [
         'title' => 'Quiénes somos',
+        'description' => 'PAH Immo acompaña a particulares y promotores en la venta y compra de inmuebles nuevos y de segunda mano en la Costa Azul. Solo con cita previa.',
+        'eyebrow' => 'Agencia inmobiliaria · Costa Azul',
+        'hero_title' => 'Tu proyecto inmobiliario en la Costa Azul, acompañado de principio a fin.',
+        'hero_body' => 'PAH Immo acompaña a particulares y promotores en sus proyectos de venta y compra de inmuebles nuevos y de segunda mano en la Costa Azul: pisos, casas, terrenos e inmuebles de prestigio.',
+        'hero_alt' => 'Salón luminoso de un inmueble acompañado por PAH Immo',
+        'badge_title' => 'Con cita previa',
+        'badge_body' => 'Un único interlocutor, a tu disposición.',
+        'facts' => [
+            'Particulares y promotores',
+            'Venta y compra',
+            'Obra nueva y segunda mano',
+        ],
+        'expertise_title' => 'Los inmuebles que acompañamos',
+        'expertise' => [
+            [
+                'title' => 'Pisos',
+                'body' => 'Nuevos o de segunda mano, para vender o comprar.',
+            ],
+            [
+                'title' => 'Casas',
+                'body' => 'Para una vivienda principal o secundaria.',
+            ],
+            [
+                'title' => 'Terrenos',
+                'body' => 'Para construir o para un proyecto de promoción.',
+            ],
+            [
+                'title' => 'Inmuebles de prestigio',
+                'body' => 'Inmuebles excepcionales, con toda la discreción que requieren.',
+            ],
+        ],
+        'founder_eyebrow' => 'El director',
+        'founder_name' => 'Pierre-Alain Héraud',
+        'founder_role' => 'Empresario individual',
+        'founder_body' => 'La agencia está dirigida por Pierre-Alain Héraud, empresario individual y profesional de la transacción inmobiliaria.',
+        'founder_paragraphs' => [
+            'Él mismo acompaña cada proyecto, desde el primer encuentro hasta la firma: un único interlocutor, que conoce tu expediente y está disponible en cada etapa.',
+            'Vendedores o compradores, particulares o promotores: cada proyecto empieza con una cita, para entender con calma tus expectativas antes de proponerte el enfoque adecuado.',
+        ],
+        'founder_points' => [
+            'Un único interlocutor',
+            'Con cita previa',
+            'Sin depósito de fondos',
+        ],
+        'appointment_title' => 'Atención solo con cita previa',
+        'appointment_body' => 'Para pedir cita, llámanos o escríbenos: acordaremos juntos un momento para hablar de tu proyecto.',
+        'call' => 'Llamar',
+        'email' => 'Enviar un correo',
+        'contact_form' => 'Formulario de contacto',
     ],
     'properties' => [
         'title' => 'Inmuebles',

@@ -63,6 +63,55 @@ return [
     ],
     'about' => [
         'title' => 'Chi siamo',
+        'description' => 'PAH Immo accompagna privati e promotori nella vendita e nell\'acquisto di immobili nuovi e d\'epoca in Costa Azzurra. Solo su appuntamento.',
+        'eyebrow' => 'Agenzia immobiliare · Costa Azzurra',
+        'hero_title' => 'Il tuo progetto immobiliare in Costa Azzurra, seguito dall\'inizio alla fine.',
+        'hero_body' => 'PAH Immo accompagna privati e promotori nei loro progetti di vendita e acquisto di immobili nuovi e d\'epoca in Costa Azzurra: appartamenti, case, terreni e immobili di prestigio.',
+        'hero_alt' => 'Soggiorno luminoso di un immobile seguito da PAH Immo',
+        'badge_title' => 'Su appuntamento',
+        'badge_body' => 'Un unico interlocutore, a tua disposizione.',
+        'facts' => [
+            'Privati e promotori',
+            'Vendita e acquisto',
+            'Nuovo e d\'epoca',
+        ],
+        'expertise_title' => 'Gli immobili che seguiamo',
+        'expertise' => [
+            [
+                'title' => 'Appartamenti',
+                'body' => 'Nuovi o d\'epoca, da vendere o da acquistare.',
+            ],
+            [
+                'title' => 'Case',
+                'body' => 'Per una residenza principale o secondaria.',
+            ],
+            [
+                'title' => 'Terreni',
+                'body' => 'Per costruire o per un progetto di promozione.',
+            ],
+            [
+                'title' => 'Immobili di prestigio',
+                'body' => 'Immobili d\'eccezione, con tutta la discrezione che richiedono.',
+            ],
+        ],
+        'founder_eyebrow' => 'Il titolare',
+        'founder_name' => 'Pierre-Alain Héraud',
+        'founder_role' => 'Imprenditore individuale',
+        'founder_body' => 'L\'agenzia è diretta da Pierre-Alain Héraud, imprenditore individuale e professionista delle transazioni immobiliari.',
+        'founder_paragraphs' => [
+            'Segue personalmente ogni progetto, dal primo incontro fino alla firma: un unico interlocutore, che conosce la tua pratica ed è raggiungibile a ogni fase.',
+            'Venditori o acquirenti, privati o promotori: ogni progetto inizia con un appuntamento, per capire con calma le tue esigenze prima di proporti il percorso più adatto.',
+        ],
+        'founder_points' => [
+            'Un unico interlocutore',
+            'Su appuntamento',
+            'Senza detenzione di fondi',
+        ],
+        'appointment_title' => 'Solo su appuntamento',
+        'appointment_body' => 'Per fissare un appuntamento chiamaci o scrivici: concorderemo insieme un momento per parlare del tuo progetto.',
+        'call' => 'Chiama',
+        'email' => 'Scrivi un\'e-mail',
+        'contact_form' => 'Modulo di contatto',
     ],
     'properties' => [
         'title' => 'Immobili',
