@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('title');
+            $table->json('title');
             $table->string('slug')->unique();
-            $table->text('description');
-            $table->longText('body');
+            $table->json('description');
+            $table->json('body');
             $table->boolean('enabled')->default(true);
             $table->unsignedInteger('views')->default(0);
             $table->timestamps();

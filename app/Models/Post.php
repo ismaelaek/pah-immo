@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Locale;
 use App\Enums\MediaCollection;
 use App\Enums\MediaConversion;
 use Database\Factories\PostFactory;
@@ -20,6 +21,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * @property int $id
@@ -38,15 +40,35 @@ use Spatie\Sluggable\SlugOptions;
 class Post extends Model implements HasMedia
 {
     /** @use HasFactory<PostFactory> */
-    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasSlug, HasTranslations, InteractsWithMedia, SoftDeletes;
+
+    /**
+     * @var list<string>
+     */
+    public array $translatable = ['title', 'description', 'body'];
 
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('title')
+            ->generateSlugsFrom(fn (Post $post): string => $post->defaultTitle())
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate()
             ->preventOverwrite();
+    }
+
+    /**
+     * The French title, used for the slug: URLs stay the same in every language.
+     * Falls back to the first available translation.
+     */
+    public function defaultTitle(): string
+    {
+        $title = $this->getTranslation('title', Locale::default()->value, false);
+
+        if ($title !== '') {
+            return $title;
+        }
+
+        return (string) collect($this->getTranslations('title'))->filter()->first();
     }
 
     public function getRouteKeyName(): string

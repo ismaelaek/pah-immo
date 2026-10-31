@@ -25,17 +25,17 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@pah-immo.com',
             ]);
 
-        $users = User::factory(3)->withAvatar()->create();
+        // $users = User::factory(3)->withAvatar()->create();
 
-        Post::factory()
-            ->recycle($users)
-            ->count(6)
-            ->create();
+        // Post::factory()
+        //     ->recycle($users)
+        //     ->count(6)
+        //     ->create();
 
-        Property::factory()
-            ->has(PropertyComment::factory()->state(['language' => 'fr']), 'comments')
-            ->count(9)
-            ->create();
+        // Property::factory()
+        //     ->has(PropertyComment::factory()->state(['language' => 'fr']), 'comments')
+        //     ->count(9)
+        //     ->create();
 
         // Messages
         Message::factory()

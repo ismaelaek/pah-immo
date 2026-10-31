@@ -47,7 +47,7 @@ class PostForm
                             ->maxLength(255)
                             ->nullable()
                             ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? $state : null)
-                            ->helperText(__('Will be used in the URL of the post. Leave empty to generate slug automatically from title.')),
+                            ->helperText(__('Used in the URL of the post, in every language. Leave empty to generate it from the French title.')),
                         Select::make('user_id')
                             ->label(__('Author'))
                             ->required()
